@@ -4,6 +4,10 @@ const helmet = require('helmet');
 const cors = require('cors');
 const sequelize = require('./config/db');
 const syncDb = require('./config/syncDb');
+const errorHandler = require('./middleware/errorHandler');
+
+// --- Routes ---
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
 
@@ -25,10 +29,16 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Booky API is running' });
 });
 
+// --- API Routes ---
+app.use('/api/auth', authRoutes);
+
 // --- 404 Handler ---
 app.use((req, res) => {
   res.status(404).json({ error: true, message: 'Route not found' });
 });
+
+// --- Global Error Handler ---
+app.use(errorHandler);
 
 // --- Database Connection + Sync + Start Server ---
 const PORT = process.env.PORT || 5000;
