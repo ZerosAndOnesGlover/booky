@@ -20,6 +20,11 @@ const Testimonial = sequelize.define('Testimonial', {
     type: DataTypes.STRING(500),
     allowNull: true,
   },
+  rating: {
+    type: DataTypes.INTEGER,
+    defaultValue: 5,
+    validate: { min: 1, max: 5 },
+  },
   display_order: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
@@ -27,6 +32,14 @@ const Testimonial = sequelize.define('Testimonial', {
   is_active: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
+  },
+  is_approved: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  source: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'admin', // 'admin' or 'public'
   },
 }, {
   tableName: 'testimonials',

@@ -1,4 +1,5 @@
 const BlogPost = require('../models/BlogPost');
+const BlogLike = require('../models/BlogLike');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../middleware/upload');
 const { generateUniqueSlug } = require('../services/slug.service');
 const { JSDOM } = require('jsdom');
@@ -44,7 +45,45 @@ const getPostBySlug = async (req, res, next) => {
       return res.status(404).json({ error: true, message: 'Post not found.' });
     }
 
-    return res.status(200).json({ post });
+    await post.increment('view_count');
+    await post.reload();
+
+    let is_liked = false;
+    if (req.query.session_id) {
+      const like = await BlogLike.findOne({ where: { post_id: post.id, session_id: req.query.session_id } });
+      is_liked = Boolean(like);
+    }
+
+    return res.status(200).json({ post, is_liked });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// --- PUBLIC: Toggle like on a post ---
+const toggleLike = async (req, res, next) => {
+  try {
+    const { session_id } = req.body;
+    if (!session_id) return res.status(400).json({ error: true, message: 'session_id is required.' });
+
+    const post = await BlogPost.findOne({ where: { slug: req.params.slug, status: 'published' } });
+    if (!post) return res.status(404).json({ error: true, message: 'Post not found.' });
+
+    const existing = await BlogLike.findOne({ where: { post_id: post.id, session_id } });
+
+    let liked;
+    if (existing) {
+      await existing.destroy();
+      await post.decrement('like_count');
+      liked = false;
+    } else {
+      await BlogLike.create({ post_id: post.id, session_id });
+      await post.increment('like_count');
+      liked = true;
+    }
+
+    await post.reload();
+    return res.status(200).json({ liked, like_count: post.like_count });
   } catch (err) {
     next(err);
   }
@@ -159,8 +198,8 @@ const updatePost = async (req, res, next) => {
       title: title || post.title,
       slug,
       body: cleanBody,
-      category: category || post.category,
-      meta_description: meta_description || post.meta_description,
+      category: category !== undefined ? category : post.category,
+      meta_description: meta_description !== undefined ? meta_description : post.meta_description,
       status: status || post.status,
       cover_image_url,
       cover_image_public_id,
@@ -190,4 +229,4 @@ const deletePost = async (req, res, next) => {
   }
 };
 
-module.exports = { getPublishedPosts, getPostBySlug, getAllPosts, getPostById, createPost, updatePost, deletePost };
+module.exports = { getPublishedPosts, getPostBySlug, toggleLike, getAllPosts, getPostById, createPost, updatePost, deletePost };

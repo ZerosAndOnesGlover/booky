@@ -1,0 +1,126 @@
+.footer {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--spacing-xl) 0 0;
+  margin-top: auto;
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+}
+
+.footer__logo {
+  height: 48px;
+  width: auto;
+  margin-bottom: var(--spacing-sm);
+  filter: brightness(0) invert(1);
+}
+
+.footer__logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-white);
+  display: block;
+  margin-bottom: var(--spacing-sm);
+}
+
+.footer__brand p {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.footer__links h4,
+.footer__contact h4 {
+  font-family: var(--font-heading);
+  color: var(--color-white);
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.1rem;
+}
+
+.footer__links ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer__links a,
+.footer__contact a {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.footer__links a:hover,
+.footer__contact a:hover {
+  color: var(--color-white);
+}
+
+.footer__contact p {
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+}
+
+.footer__social {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding: var(--spacing-sm) 0;
+}
+
+.footer__bottom p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+[data-theme="dark"] .footer {
+  background-color: #0F0A1A;
+}
+
+[data-theme="dark"] .footer__logo-text {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .footer__links h4,
+[data-theme="dark"] .footer__contact h4 {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .footer__brand p,
+[data-theme="dark"] .footer__links a,
+[data-theme="dark"] .footer__contact a,
+[data-theme="dark"] .footer__contact p {
+  color: var(--color-grey);
+}
+
+[data-theme="dark"] .footer__links a:hover,
+[data-theme="dark"] .footer__contact a:hover {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .footer__bottom {
+  border-top-color: rgba(201,168,232,0.12);
+}
+
+[data-theme="dark"] .footer__bottom p {
+  color: var(--color-grey);
+}

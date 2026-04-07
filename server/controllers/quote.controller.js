@@ -1,6 +1,7 @@
 const QuoteSubmission = require('../models/QuoteSubmission');
+const SiteSettings = require('../models/SiteSettings');
 const { uploadToCloudinary } = require('../middleware/upload');
-const { sendQuoteNotificationEmail } = require('../services/email.service');
+const { sendQuoteNotificationEmail, sendWhatsAppNotification } = require('../services/email.service');
 
 // --- PUBLIC: Submit quote form ---
 const submitQuote = async (req, res, next) => {
@@ -38,10 +39,16 @@ const submitQuote = async (req, res, next) => {
       file_public_id,
     });
 
-    // Send email notification (non-blocking)
+    // Send notifications (non-blocking)
     sendQuoteNotificationEmail(submission).catch((err) => {
       console.error('Email notification failed:', err.message);
     });
+
+    SiteSettings.findByPk(1).then((settings) => {
+      if (settings?.whatsapp_number) {
+        sendWhatsAppNotification(settings.whatsapp_number, submission).catch(() => {});
+      }
+    }).catch(() => {});
 
     return res.status(201).json({
       message: "Thank you! We'll get back to you within 24-48 hours.",

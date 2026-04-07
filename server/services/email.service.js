@@ -76,4 +76,35 @@ const sendQuoteNotificationEmail = async (submission) => {
   await transporter.sendMail(mailOptions);
 };
 
-module.exports = { sendPasswordResetEmail, sendQuoteNotificationEmail };
+// --- WHATSAPP NOTIFICATION via CallMeBot ---
+const sendWhatsAppNotification = async (whatsappNumber, submission) => {
+  const apiKey = process.env.CALLMEBOT_API_KEY;
+  if (!apiKey || !whatsappNumber) return;
+
+  const cleanNumber = whatsappNumber.replace(/\D/g, '');
+  const message =
+    `📋 New Quote Request!\n` +
+    `👤 ${submission.full_name}\n` +
+    `📧 ${submission.email}\n` +
+    `📞 ${submission.phone || 'N/A'}\n` +
+    `📖 "${submission.book_title}" (${submission.genre || 'N/A'})\n` +
+    `✏️ ${submission.editing_type}\n` +
+    `🗓 Deadline: ${submission.deadline || 'N/A'}\n` +
+    `Check admin panel for details.`;
+
+  const url =
+    `https://api.callmebot.com/whatsapp.php` +
+    `?phone=${encodeURIComponent(cleanNumber)}` +
+    `&text=${encodeURIComponent(message)}` +
+    `&apikey=${encodeURIComponent(apiKey)}`;
+
+  const https = require('https');
+  return new Promise((resolve) => {
+    https.get(url, (res) => {
+      res.resume();
+      resolve();
+    }).on('error', () => resolve());
+  });
+};
+
+module.exports = { sendPasswordResetEmail, sendQuoteNotificationEmail, sendWhatsAppNotification };

@@ -1,0 +1,26 @@
+.notfound {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.notfound__inner {
+  text-align: center;
+  padding: var(--spacing-xxl) 0;
+}
+
+.notfound__inner h1 {
+  font-size: 8rem;
+  line-height: 1;
+  color: var(--color-secondary);
+  margin-bottom: 0;
+}
+
+.notfound__inner h2 {
+  margin-bottom: var(--spacing-sm);
+}
+
+.notfound__inner p {
+  color: var(--color-grey);
+  margin-bottom: var(--spacing-lg);
+}

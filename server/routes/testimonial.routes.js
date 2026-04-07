@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const {
-  getTestimonials, getAllTestimonials,
-  createTestimonial, updateTestimonial, deleteTestimonial,
+  getTestimonials, submitPublicTestimonial,
+  getAllTestimonials, createTestimonial, updateTestimonial,
+  approveTestimonial, deleteTestimonial,
 } = require('../controllers/testimonial.controller');
 const authMiddleware = require('../middleware/auth');
 const { body, validationResult } = require('express-validator');
@@ -17,6 +18,7 @@ const handleValidation = (req, res, next) => {
 
 // --- PUBLIC ---
 router.get('/public/testimonials', getTestimonials);
+router.post('/public/testimonials', submitPublicTestimonial);
 
 // --- ADMIN ---
 router.get('/admin/testimonials', authMiddleware, getAllTestimonials);
@@ -31,6 +33,7 @@ router.post('/admin/testimonials', authMiddleware,
 );
 
 router.put('/admin/testimonials/:id', authMiddleware, updateTestimonial);
+router.put('/admin/testimonials/:id/approve', authMiddleware, approveTestimonial);
 router.delete('/admin/testimonials/:id', authMiddleware, deleteTestimonial);
 
 module.exports = router;

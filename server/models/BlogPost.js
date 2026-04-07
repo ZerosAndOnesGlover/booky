@@ -47,6 +47,14 @@ const BlogPost = sequelize.define('BlogPost', {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  view_count: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  like_count: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 }, {
   tableName: 'blog_posts',
   timestamps: true,

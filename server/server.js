@@ -13,13 +13,27 @@ const settingsRoutes = require('./routes/settings.routes');
 const aboutRoutes = require('./routes/about.routes');
 const testimonialRoutes = require('./routes/testimonial.routes');
 const quoteRoutes = require('./routes/quote.routes');
+const analyticsRoutes = require('./routes/analytics.routes');
+const commentRoutes = require('./routes/comment.routes');
 
 const app = express();
 
 // --- Security Middleware ---
 app.use(helmet());
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  // Allow any private network IP on the same port (for local client previews)
+  /^http:\/\/(192\.168|10\.\d+|172\.(1[6-9]|2\d|3[01]))\.\d+\.\d+:5173$/,
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.some(o => typeof o === 'string' ? o === origin : o.test(origin))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -41,6 +55,8 @@ app.use('/api', settingsRoutes);
 app.use('/api', aboutRoutes);
 app.use('/api', testimonialRoutes);
 app.use('/api', quoteRoutes);
+app.use('/api', analyticsRoutes);
+app.use('/api', commentRoutes);
 
 // --- 404 Handler ---
 app.use((req, res) => {

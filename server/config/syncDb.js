@@ -7,6 +7,9 @@ require('../models/SiteSettings');
 require('../models/AboutContent');
 require('../models/Testimonial');
 require('../models/QuoteSubmission');
+require('../models/PageView');
+require('../models/BlogLike');
+require('../models/BlogComment');
 
 const syncDb = async () => {
   try {

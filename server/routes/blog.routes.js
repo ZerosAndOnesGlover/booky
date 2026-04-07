@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
-  getPublishedPosts, getPostBySlug, getAllPosts,
+  getPublishedPosts, getPostBySlug, toggleLike, getAllPosts,
   getPostById, createPost, updatePost, deletePost,
 } = require('../controllers/blog.controller');
 const authMiddleware = require('../middleware/auth');
