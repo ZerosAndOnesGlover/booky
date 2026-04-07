@@ -8,6 +8,11 @@ const errorHandler = require('./middleware/errorHandler');
 
 // --- Routes ---
 const authRoutes = require('./routes/auth.routes');
+const blogRoutes = require('./routes/blog.routes');
+const settingsRoutes = require('./routes/settings.routes');
+const aboutRoutes = require('./routes/about.routes');
+const testimonialRoutes = require('./routes/testimonial.routes');
+const quoteRoutes = require('./routes/quote.routes');
 
 const app = express();
 
@@ -31,6 +36,11 @@ app.get('/health', (req, res) => {
 
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
+app.use('/api', blogRoutes);
+app.use('/api', settingsRoutes);
+app.use('/api', aboutRoutes);
+app.use('/api', testimonialRoutes);
+app.use('/api', quoteRoutes);
 
 // --- 404 Handler ---
 app.use((req, res) => {
