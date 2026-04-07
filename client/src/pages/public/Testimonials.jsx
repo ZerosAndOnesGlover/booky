@@ -4,21 +4,13 @@ import { getTestimonialsApi, submitPublicTestimonialApi } from '../../services/a
 import './Testimonials.css';
 
 const StarPicker = ({ value, onChange }) => (
-  <div style={{ display: 'flex', gap: '4px' }}>
+  <div className="star-picker">
     {[1,2,3,4,5].map((n) => (
       <button
         key={n}
         type="button"
         onClick={() => onChange(n)}
-        style={{
-          background: 'none',
-          border: 'none',
-          fontSize: '1.8rem',
-          cursor: 'pointer',
-          color: n <= value ? '#F59E0B' : 'var(--color-border)',
-          padding: '2px',
-          lineHeight: 1,
-        }}
+        className={`star-picker__btn${n <= value ? ' star-picker__btn--active' : ''}`}
         aria-label={`${n} star${n > 1 ? 's' : ''}`}
       >
         ★

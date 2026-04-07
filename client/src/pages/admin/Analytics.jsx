@@ -68,20 +68,11 @@ const Analytics = () => {
     <AdminLayout>
       <div className="admin-page-header">
         <h1>Analytics</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="analytics-controls">
           <select
+            className="analytics-select"
             value={range}
             onChange={(e) => setRange(e.target.value)}
-            style={{
-              padding: '8px 14px',
-              borderRadius: 'var(--border-radius)',
-              border: '2px solid var(--color-border)',
-              background: 'var(--color-white)',
-              color: 'var(--color-text)',
-              fontSize: '0.9rem',
-              fontFamily: 'var(--font-body)',
-              cursor: 'pointer',
-            }}
           >
             {RANGES.map((r) => (
               <option key={r.value} value={r.value}>{r.label}</option>
@@ -89,43 +80,27 @@ const Analytics = () => {
           </select>
 
           {range === 'custom' && (
-            <>
+            <div className="analytics-date-row">
               <input
+                className="analytics-date"
                 type="date"
                 value={startDate}
                 max={endDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: 'var(--border-radius)',
-                  border: '2px solid var(--color-border)',
-                  background: 'var(--color-white)',
-                  color: 'var(--color-text)',
-                  fontSize: '0.9rem',
-                  fontFamily: 'var(--font-body)',
-                }}
               />
-              <span style={{ color: 'var(--color-grey)', fontSize: '0.9rem' }}>to</span>
+              <span className="analytics-date-sep">to</span>
               <input
+                className="analytics-date"
                 type="date"
                 value={endDate}
                 min={startDate}
                 max={today}
                 onChange={(e) => setEndDate(e.target.value)}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: 'var(--border-radius)',
-                  border: '2px solid var(--color-border)',
-                  background: 'var(--color-white)',
-                  color: 'var(--color-text)',
-                  fontSize: '0.9rem',
-                  fontFamily: 'var(--font-body)',
-                }}
               />
               <button className="btn btn-primary" style={{ padding: '8px 20px' }} onClick={handleCustomApply}>
                 Apply
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -134,7 +109,7 @@ const Analytics = () => {
         <div className="spinner"></div>
       ) : (
         <>
-          <div className="admin-stats" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div className="admin-stats analytics-stats">
             <div className="admin-stat-card">
               <span className="admin-stat-card__number">{data?.totalViews ?? 0}</span>
               <span className="admin-stat-card__label">Page Views ({rangeLabel})</span>
@@ -153,7 +128,7 @@ const Analytics = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '24px' }}>
+          <div className="analytics-grid" style={{ marginTop: '24px' }}>
             <div className="admin-table-wrapper">
               <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(75,46,99,0.1)' }}>
                 <h3 style={{ margin: 0, fontSize: '1rem' }}>Top Pages</h3>
@@ -166,8 +141,8 @@ const Analytics = () => {
                   <tbody>
                     {data.topPages.map((p, i) => (
                       <tr key={i}>
-                        <td style={{ fontSize: '0.9rem' }}>{friendlyPath(p.path)}</td>
-                        <td style={{ textAlign: 'right', fontWeight: 600 }}>{p.views}</td>
+                        <td data-label="Page" style={{ fontSize: '0.9rem' }}>{friendlyPath(p.path)}</td>
+                        <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{p.views}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -187,8 +162,8 @@ const Analytics = () => {
                   <tbody>
                     {data.topCountries.map((c, i) => (
                       <tr key={i}>
-                        <td>{getCountryName(c.country)}</td>
-                        <td style={{ textAlign: 'right', fontWeight: 600 }}>{c.views}</td>
+                        <td data-label="Country">{getCountryName(c.country)}</td>
+                        <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{c.views}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -209,8 +184,8 @@ const Analytics = () => {
                 <tbody>
                   {data.dailyViews.map((d, i) => (
                     <tr key={i}>
-                      <td>{new Date(d.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                      <td style={{ textAlign: 'right', fontWeight: 600 }}>{d.views}</td>
+                      <td data-label="Date">{new Date(d.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{d.views}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -230,9 +205,9 @@ const Analytics = () => {
                 <tbody>
                   {data.topPosts.map((p) => (
                     <tr key={p.id}>
-                      <td>{p.title}</td>
-                      <td style={{ textAlign: 'right', fontWeight: 600 }}>{p.view_count}</td>
-                      <td style={{ textAlign: 'right', fontWeight: 600 }}>{p.like_count}</td>
+                      <td data-label="Title">{p.title}</td>
+                      <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{p.view_count}</td>
+                      <td data-label="Likes" style={{ textAlign: 'right', fontWeight: 600 }}>{p.like_count}</td>
                     </tr>
                   ))}
                 </tbody>

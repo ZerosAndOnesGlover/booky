@@ -70,6 +70,7 @@ const AdminLayout = ({ children }) => {
             {pendingComments > 0 && <span className="badge">{pendingComments}</span>}
           </NavLink>
           <NavLink to="/admin/analytics">📊 Analytics</NavLink>
+          <NavLink to="/admin/ai">✦ Booky AI</NavLink>
           <NavLink to="/admin/settings">⚙️ Settings</NavLink>
           <NavLink to="/admin/about">📄 About Page</NavLink>
         </nav>

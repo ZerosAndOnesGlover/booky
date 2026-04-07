@@ -94,9 +94,9 @@ const Comments = () => {
               {comments.map((c) => (
                 <Fragment key={c.id}>
                   <tr>
-                    <td><strong>{c.author_name}</strong></td>
-                    <td style={{ fontSize: '0.8rem', color: 'var(--color-grey)' }}>/blog/{c.post_slug}</td>
-                    <td style={{ maxWidth: '280px' }}>
+                    <td data-label="Author"><strong>{c.author_name}</strong></td>
+                    <td data-label="Post" style={{ fontSize: '0.8rem', color: 'var(--color-grey)' }}>/blog/{c.post_slug}</td>
+                    <td data-label="Comment" style={{ maxWidth: '280px' }}>
                       <span style={{
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
@@ -107,13 +107,13 @@ const Comments = () => {
                         {c.body}
                       </span>
                     </td>
-                    <td>{new Date(c.created_at).toLocaleDateString()}</td>
-                    <td>
+                    <td data-label="Date">{new Date(c.created_at).toLocaleDateString()}</td>
+                    <td data-label="Status">
                       <span className={`status-badge ${c.is_approved ? 'status-badge--published' : 'status-badge--draft'}`}>
                         {c.is_approved ? 'Approved' : 'Pending'}
                       </span>
                     </td>
-                    <td style={{ display: 'flex', gap: '8px' }}>
+                    <td data-label="Actions" style={{ display: 'flex', gap: '8px' }}>
                       {!c.is_approved && (
                         <button className="action-btn action-btn--edit" onClick={() => handleApprove(c.id)}>
                           Approve

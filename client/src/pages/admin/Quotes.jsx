@@ -58,18 +58,18 @@ const Quotes = () => {
               {quotes.map((q) => (
                 <Fragment key={q.id}>
                   <tr className={!q.is_read ? 'unread' : ''} style={{ cursor: 'pointer' }} onClick={() => setExpanded(expanded === q.id ? null : q.id)}>
-                    <td>{q.full_name}</td>
-                    <td>{q.editing_type}</td>
-                    <td>{new Date(q.submitted_at).toLocaleDateString()}</td>
-                    <td><span className={`status-badge status-badge--${q.is_read ? 'read' : 'unread'}`}>{q.is_read ? 'Read' : 'Unread'}</span></td>
-                    <td onClick={(e) => e.stopPropagation()}>
+                    <td data-label="Name">{q.full_name}</td>
+                    <td data-label="Service">{q.editing_type}</td>
+                    <td data-label="Date">{new Date(q.submitted_at).toLocaleDateString()}</td>
+                    <td data-label="Status"><span className={`status-badge status-badge--${q.is_read ? 'read' : 'unread'}`}>{q.is_read ? 'Read' : 'Unread'}</span></td>
+                    <td data-label="Actions" onClick={(e) => e.stopPropagation()}>
                       <button className="action-btn action-btn--edit" onClick={() => handleToggleRead(q.id, q.is_read)}>
                         {q.is_read ? 'Mark Unread' : 'Mark Read'}
                       </button>
                     </td>
                   </tr>
                   {expanded === q.id && (
-                    <tr>
+                    <tr className="detail-row">
                       <td colSpan={5}>
                         <div className="quote-detail">
                           <div className="quote-detail__grid">

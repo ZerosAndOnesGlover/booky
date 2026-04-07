@@ -25,6 +25,7 @@ import ForgotPassword from './pages/admin/ForgotPassword';
 import ResetPassword from './pages/admin/ResetPassword';
 import Analytics from './pages/admin/Analytics';
 import Comments from './pages/admin/Comments';
+import AdminAI from './pages/admin/AdminAI';
 
 const App = () => {
   return (
@@ -52,6 +53,7 @@ const App = () => {
       <Route path="/admin/quotes" element={<ProtectedRoute><Quotes /></ProtectedRoute>} />
       <Route path="/admin/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
       <Route path="/admin/comments" element={<ProtectedRoute><Comments /></ProtectedRoute>} />
+      <Route path="/admin/ai" element={<ProtectedRoute><AdminAI /></ProtectedRoute>} />
 
       {/* 404 */}
       <Route path="*" element={<Layout><NotFound /></Layout>} />

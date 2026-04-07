@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getAllPostsApi, getQuotesApi } from '../../services/api';
+import { getAllPostsApi, getQuotesApi, getAdminCommentsApi } from '../../services/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 
 const Dashboard = () => {
   const { token } = useAuth();
-  const [stats, setStats] = useState({ published: 0, drafts: 0, unread: 0 });
+  const [stats, setStats] = useState({ published: 0, drafts: 0, unread: 0, pendingComments: 0 });
   const [recentQuotes, setRecentQuotes] = useState([]);
 
   useEffect(() => {
@@ -16,9 +16,12 @@ const Dashboard = () => {
       setStats(s => ({ ...s, published, drafts }));
     }).catch(() => {});
 
-    // Unread count for the stat card
     getQuotesApi(token, 'unread').then((res) => {
       setStats(s => ({ ...s, unread: res.data.total }));
+    }).catch(() => {});
+
+    getAdminCommentsApi(token, 'pending').then((res) => {
+      setStats(s => ({ ...s, pendingComments: res.data.total ?? res.data.comments?.length ?? 0 }));
     }).catch(() => {});
 
     // Recent submissions (any status) for the table
@@ -47,6 +50,10 @@ const Dashboard = () => {
           <span className="admin-stat-card__number">{stats.unread}</span>
           <span className="admin-stat-card__label">Unread Quotes</span>
         </div>
+        <div className="admin-stat-card">
+          <span className="admin-stat-card__number">{stats.pendingComments}</span>
+          <span className="admin-stat-card__label">Pending Comments</span>
+        </div>
       </div>
 
       <div className="admin-table-wrapper">
@@ -69,10 +76,10 @@ const Dashboard = () => {
             <tbody>
               {recentQuotes.map((q) => (
                 <tr key={q.id} className={!q.is_read ? 'unread' : ''}>
-                  <td>{q.full_name}</td>
-                  <td>{q.editing_type}</td>
-                  <td>{new Date(q.submitted_at).toLocaleDateString()}</td>
-                  <td><span className={`status-badge status-badge--${q.is_read ? 'read' : 'unread'}`}>{q.is_read ? 'Read' : 'Unread'}</span></td>
+                  <td data-label="Name">{q.full_name}</td>
+                  <td data-label="Service">{q.editing_type}</td>
+                  <td data-label="Date">{new Date(q.submitted_at).toLocaleDateString()}</td>
+                  <td data-label="Status"><span className={`status-badge status-badge--${q.is_read ? 'read' : 'unread'}`}>{q.is_read ? 'Read' : 'Unread'}</span></td>
                 </tr>
               ))}
             </tbody>

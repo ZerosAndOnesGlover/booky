@@ -179,6 +179,17 @@
   color: var(--color-primary);
 }
 
+@media (max-width: 480px) {
+  .admin-auth {
+    padding: var(--spacing-sm);
+    align-items: center;
+  }
+
+  .admin-auth__box {
+    padding: var(--spacing-md);
+  }
+}
+
 /* --- Admin Font Override (spec: system font stack throughout admin panel) --- */
 .admin-layout h1,
 .admin-layout h2,
@@ -489,6 +500,14 @@
   max-width: 800px;
 }
 
+@media (max-width: 768px) {
+  .admin-form {
+    padding: var(--spacing-md);
+    max-width: 100%;
+    border-radius: var(--border-radius);
+  }
+}
+
 .admin-form .form-group label {
   color: var(--color-text);
 }
@@ -737,15 +756,11 @@
 
   .admin-main {
     margin-left: 0;
-    padding-top: calc(56px + var(--spacing-md));
+    padding: calc(56px + var(--spacing-md)) var(--spacing-sm) var(--spacing-md);
   }
 
   .admin-stats {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .admin-table-wrapper {
-    overflow-x: auto;
   }
 
   .admin-page-header {
@@ -756,5 +771,185 @@
 
   .admin-filters {
     flex-wrap: wrap;
+  }
+
+  /* Testimonials manager: stack list + form vertically */
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* BlogEdit: stack category/meta fields */
+  .blog-edit-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Analytics: stack controls and grids */
+  .admin-page-header:has(.analytics-controls) {
+    align-items: flex-start;
+  }
+
+  .analytics-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .analytics-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .analytics-select {
+    width: 100%;
+  }
+
+  .analytics-date-row {
+    width: 100%;
+  }
+
+  .analytics-date {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* --- Analytics --- */
+.analytics-stats {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.analytics-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.analytics-select,
+.analytics-date {
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  border: 2px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.analytics-date-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.analytics-date-sep {
+  color: var(--color-grey);
+  font-size: 0.9rem;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+[data-theme="dark"] .analytics-select,
+[data-theme="dark"] .analytics-date {
+  background: var(--color-secondary);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* --- Card-style table rows on small screens (replaces horizontal scroll) --- */
+@media (max-width: 600px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Centre a lone last card when total count is odd (e.g. 3 cards → 2+1) */
+  .admin-stats > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: calc(50% - var(--spacing-md) / 2);
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .analytics-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .admin-table-wrapper {
+    overflow-x: visible;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-table,
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table tr {
+    border-bottom: 2px solid rgba(75, 46, 99, 0.12);
+    margin-bottom: 4px;
+    padding: 4px 0;
+  }
+
+  .admin-table tr:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .admin-table td {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(75, 46, 99, 0.05);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+
+  .admin-table td:last-child {
+    border-bottom: none;
+    flex-wrap: wrap;
+  }
+
+  .admin-table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-grey);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 80px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  /* Expanded detail row (Quotes) — full-width, no label */
+  .admin-table tr.detail-row td {
+    padding: 0;
+    border-bottom: none;
+    display: block;
+  }
+
+  .admin-table tr.detail-row td::before {
+    display: none;
+  }
+
+  [data-theme="dark"] .admin-table tr {
+    border-bottom-color: rgba(201, 168, 232, 0.12);
   }
 }

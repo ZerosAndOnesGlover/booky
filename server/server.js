@@ -15,6 +15,7 @@ const testimonialRoutes = require('./routes/testimonial.routes');
 const quoteRoutes = require('./routes/quote.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const commentRoutes = require('./routes/comment.routes');
+const aiRoutes = require('./routes/ai.routes');
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use('/api', testimonialRoutes);
 app.use('/api', quoteRoutes);
 app.use('/api', analyticsRoutes);
 app.use('/api', commentRoutes);
+app.use('/api', aiRoutes);
 
 // --- 404 Handler ---
 app.use((req, res) => {

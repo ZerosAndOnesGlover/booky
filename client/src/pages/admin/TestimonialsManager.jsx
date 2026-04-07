@@ -167,7 +167,7 @@ const TestimonialsManager = () => {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'start' }}>
+      <div className="testimonials-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'start' }}>
         <div className="admin-table-wrapper">
           {testimonials.length === 0 ? (
             <p style={{ padding: '24px', color: 'var(--color-grey)', textAlign: 'center' }}>
@@ -191,23 +191,23 @@ const TestimonialsManager = () => {
                     style={{ cursor: 'pointer' }}
                     onClick={() => setViewItem(t)}
                   >
-                    <td>
+                    <td data-label="Client">
                       <strong>{t.client_name}</strong>
                       {t.book_title && <><br /><small style={{ color: 'var(--color-grey)' }}>{t.book_title}</small></>}
                     </td>
-                    <td style={{ color: '#F59E0B', fontSize: '0.9rem' }}>{'★'.repeat(t.rating ?? 5)}</td>
-                    <td>
+                    <td data-label="Stars" style={{ color: '#F59E0B', fontSize: '0.9rem' }}>{'★'.repeat(t.rating ?? 5)}</td>
+                    <td data-label="Source">
                       <span className={`status-badge ${t.source === 'public' ? 'status-badge--unread' : 'status-badge--read'}`}>
                         {t.source === 'public' ? 'Visitor' : 'Admin'}
                       </span>
                     </td>
                     {filter === 'approved' && (
-                      <td onClick={(e) => e.stopPropagation()}>
+                      <td data-label="Order" onClick={(e) => e.stopPropagation()}>
                         <button className="action-btn action-btn--edit" onClick={() => handleReorder(t.id, 'up', i)} disabled={i === 0}>↑</button>
                         <button className="action-btn action-btn--edit" onClick={() => handleReorder(t.id, 'down', i)} disabled={i === testimonials.length - 1} style={{ marginLeft: '4px' }}>↓</button>
                       </td>
                     )}
-                    <td onClick={(e) => e.stopPropagation()} style={{ display: 'flex', gap: '6px' }}>
+                    <td data-label="Actions" onClick={(e) => e.stopPropagation()} style={{ display: 'flex', gap: '6px' }}>
                       {!t.is_approved && (
                         <button className="action-btn action-btn--edit" onClick={() => handleApprove(t.id)}>Approve</button>
                       )}

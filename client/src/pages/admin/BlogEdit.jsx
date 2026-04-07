@@ -119,7 +119,7 @@ const BlogEdit = () => {
           {slug && <small style={{ color: 'var(--color-grey)', marginTop: '4px', display: 'block' }}>Slug: /blog/{slug}</small>}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div className="blog-edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
           <div className="form-group">
             <label>Category</label>
             <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="e.g. Writing Tips" />

@@ -72,10 +72,10 @@ const AdminBlogList = () => {
             <tbody>
               {posts.map((post) => (
                 <tr key={post.id}>
-                  <td>{post.title}</td>
-                  <td><span className={`status-badge status-badge--${post.status}`}>{post.status}</span></td>
-                  <td>{new Date(post.created_at).toLocaleDateString()}</td>
-                  <td style={{ display: 'flex', gap: '8px' }}>
+                  <td data-label="Title">{post.title}</td>
+                  <td data-label="Status"><span className={`status-badge status-badge--${post.status}`}>{post.status}</span></td>
+                  <td data-label="Date">{new Date(post.created_at).toLocaleDateString()}</td>
+                  <td data-label="Actions" style={{ display: 'flex', gap: '8px' }}>
                     <button className="action-btn action-btn--edit" onClick={() => navigate(`/admin/blogs/${post.id}`)}>Edit</button>
                     <button className="action-btn action-btn--delete" onClick={() => setConfirmTarget({ id: post.id, title: post.title })}>Delete</button>
                   </td>
