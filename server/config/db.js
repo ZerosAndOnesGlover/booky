@@ -1,13 +1,18 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize');
 
-const isRemoteDb = process.env.POSTGRES_URL && !process.env.POSTGRES_URL.includes('localhost') && !process.env.POSTGRES_URL.includes('127.0.0.1');
+// Remove sslmode param from URL to avoid conflicts
+const connectionUrl = process.env.POSTGRES_URL.replace(/[?&]sslmode=\w+/, '');
 
-const sequelize = new Sequelize(process.env.POSTGRES_URL, {
-  dialect: "postgres",
-  dialectOptions: {
-    ssl: isRemoteDb
-      ? { require: true, rejectUnauthorized: false }
-      : false,
+const isLocal = connectionUrl.includes('localhost') || connectionUrl.includes('127.0.0.1');
+
+const sequelize = new Sequelize(connectionUrl, {
+  dialect: 'postgres',
+  dialectOptions: isLocal ? {} : {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+    family: 4, // force IPv4 — Render free tier does not support IPv6
   },
   pool: {
     max: 5,
