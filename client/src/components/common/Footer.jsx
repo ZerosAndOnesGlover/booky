@@ -58,6 +58,12 @@ const Footer = () => {
       <div className="footer__bottom">
         <div className="container footer__bottom-inner">
           <p>&copy; {new Date().getFullYear()} Booky Editing Services. All rights reserved.</p>
+          <p className="footer__maker">
+            Built by{' '}
+            <a href="https://adebayoglover.vercel.app" target="_blank" rel="noopener noreferrer">
+              GloverSoft Inc.
+            </a>
+          </p>
           <Link to="/admin/login" className="footer__admin-link">Admin</Link>
         </div>
       </div>
