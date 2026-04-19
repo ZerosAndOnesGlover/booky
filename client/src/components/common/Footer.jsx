@@ -56,8 +56,9 @@ const Footer = () => {
       </div>
 
       <div className="footer__bottom">
-        <div className="container">
+        <div className="container footer__bottom-inner">
           <p>&copy; {new Date().getFullYear()} Booky Editing Services. All rights reserved.</p>
+          <Link to="/admin/login" className="footer__admin-link">Admin</Link>
         </div>
       </div>
     </footer>

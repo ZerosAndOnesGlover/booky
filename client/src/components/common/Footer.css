@@ -78,11 +78,26 @@
   padding: var(--spacing-sm) 0;
 }
 
+.footer__bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .footer__bottom p {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.85rem;
-  text-align: center;
   margin: 0;
+}
+
+.footer__admin-link {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.75rem;
+  transition: var(--transition);
+}
+
+.footer__admin-link:hover {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 @media (max-width: 768px) {
