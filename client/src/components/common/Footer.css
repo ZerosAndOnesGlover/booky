@@ -92,17 +92,21 @@
 
 .footer__maker {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
 }
 
 .footer__maker a {
-  color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
   transition: var(--transition);
 }
 
 .footer__maker a:hover {
-  color: var(--color-white);
+  color: #fff;
+  opacity: 0.75;
 }
 
 .footer__admin-link {
@@ -153,4 +157,17 @@
 
 [data-theme="dark"] .footer__bottom p {
   color: var(--color-grey);
+}
+
+[data-theme="dark"] .footer__maker {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="dark"] .footer__maker a {
+  color: #e0c8f8;
+}
+
+[data-theme="dark"] .footer__maker a:hover {
+  color: #fff;
+  opacity: 1;
 }
