@@ -96,7 +96,7 @@ const getAnalytics = async (req, res, next) => {
       rangeWhere = { created_at: { [Op.gte]: rangeStart } };
     }
 
-    const [totalViews, todayVisitors, weekVisitors, monthVisitors, topPages, dailyViews, topPosts, topCountries] =
+    const [totalViews, todayVisitors, weekVisitors, monthVisitors, topPages, dailyViews, topPostViews, topCountries] =
       await Promise.all([
         PageView.count({ where: rangeWhere }),
 
@@ -138,11 +138,14 @@ const getAnalytics = async (req, res, next) => {
           raw: true,
         }),
 
-        BlogPost.findAll({
-          where: { status: 'published' },
-          attributes: ['id', 'title', 'slug', 'view_count', 'like_count'],
-          order: [['view_count', 'DESC']],
+        // Blog post views filtered by the selected date range via PageView
+        PageView.findAll({
+          attributes: ['path', [fn('COUNT', col('id')), 'views']],
+          where: { ...rangeWhere, path: { [Op.like]: '/blog/%' } },
+          group: ['path'],
+          order: [[literal('views'), 'DESC']],
           limit: 10,
+          raw: true,
         }),
 
         PageView.findAll({
@@ -154,6 +157,24 @@ const getAnalytics = async (req, res, next) => {
           raw: true,
         }),
       ]);
+
+    // Join blog post view counts with post metadata
+    const slugs = topPostViews.map(r => r.path.replace('/blog/', ''));
+    const postMeta = slugs.length
+      ? await BlogPost.findAll({
+          where: { slug: { [Op.in]: slugs }, status: 'published' },
+          attributes: ['id', 'title', 'slug', 'like_count'],
+        })
+      : [];
+
+    const topPosts = topPostViews
+      .map(r => {
+        const slug = r.path.replace('/blog/', '');
+        const post = postMeta.find(p => p.slug === slug);
+        if (!post) return null;
+        return { id: post.id, title: post.title, slug: post.slug, view_count: parseInt(r.views, 10), like_count: post.like_count };
+      })
+      .filter(Boolean);
 
     return res.status(200).json({
       totalViews,

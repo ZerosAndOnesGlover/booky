@@ -484,6 +484,16 @@
   box-shadow: var(--shadow);
   z-index: 9999;
   animation: slideIn 0.3s ease;
+  max-width: calc(100vw - 32px);
+}
+
+@media (max-width: 600px) {
+  .admin-toast {
+    right: 16px;
+    left: 16px;
+    bottom: 16px;
+    text-align: center;
+  }
 }
 
 @keyframes slideIn {
@@ -508,8 +518,90 @@
   }
 }
 
+@media (max-width: 480px) {
+  .admin-form {
+    padding: var(--spacing-sm);
+  }
+}
+
 .admin-form .form-group label {
   color: var(--color-text);
+}
+
+/* --- Settings page --- */
+.settings-wrapper {
+  display: grid;
+  gap: 24px;
+  max-width: 800px;
+  width: 100%;
+}
+
+.settings-section-title {
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.settings-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.settings-logo-preview {
+  height: 60px;
+  object-fit: contain;
+  max-width: 180px;
+}
+
+.settings-photo-preview {
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  max-width: 120px;
+}
+
+.settings-file-input {
+  display: block;
+  width: 100%;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  padding: 8px 0;
+}
+
+.settings-save-btn {
+  margin-top: 12px;
+}
+
+.settings-error {
+  color: var(--color-error, #e53e3e);
+  background-color: #fce4e4;
+  border: 1px solid currentColor;
+  border-radius: var(--border-radius);
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.btn-danger {
+  color: var(--color-error, #e53e3e) !important;
+  border-color: var(--color-error, #e53e3e) !important;
+}
+
+@media (max-width: 600px) {
+  .settings-save-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .settings-preview-row {
+    align-items: flex-start;
+  }
+
+  .settings-logo-preview {
+    max-width: 140px;
+  }
 }
 
 /* --- Expanded Row --- */

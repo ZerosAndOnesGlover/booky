@@ -128,44 +128,44 @@ const Settings = () => {
       {toast && <div className="admin-toast">{toast}</div>}
       <div className="admin-page-header"><h1>Settings</h1></div>
 
-      <div style={{ display: 'grid', gap: '24px', maxWidth: '800px' }}>
+      <div className="settings-wrapper">
         {/* Logo */}
         <div className="admin-form">
-          <h3 style={{ marginBottom: '16px' }}>Logo</h3>
+          <h3 className="settings-section-title">Logo</h3>
           {logoPreview && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-              <img src={logoPreview} alt="Logo" style={{ height: '60px', objectFit: 'contain' }} />
-              <button className="btn btn-outline" onClick={handleLogoRemove} disabled={saving === 'logo-remove'} style={{ color: 'var(--color-danger, #e53e3e)', borderColor: 'var(--color-danger, #e53e3e)' }}>
+            <div className="settings-preview-row">
+              <img src={logoPreview} alt="Logo" className="settings-logo-preview" />
+              <button className="btn btn-outline btn-danger" onClick={handleLogoRemove} disabled={saving === 'logo-remove'}>
                 {saving === 'logo-remove' ? 'Removing...' : 'Remove'}
               </button>
             </div>
           )}
-          <input type="file" accept="image/*" onChange={(e) => { setLogoFile(e.target.files[0]); setLogoPreview(URL.createObjectURL(e.target.files[0])); }} />
-          <button className="btn btn-primary" style={{ marginTop: '12px' }} onClick={handleLogoUpload} disabled={saving === 'logo' || !logoFile}>
+          <input className="settings-file-input" type="file" accept="image/*" onChange={(e) => { setLogoFile(e.target.files[0]); setLogoPreview(URL.createObjectURL(e.target.files[0])); }} />
+          <button className="btn btn-primary settings-save-btn" onClick={handleLogoUpload} disabled={saving === 'logo' || !logoFile}>
             {saving === 'logo' ? 'Uploading...' : 'Save Logo'}
           </button>
         </div>
 
         {/* Founder Photo */}
         <div className="admin-form">
-          <h3 style={{ marginBottom: '16px' }}>Founder Photo</h3>
+          <h3 className="settings-section-title">Founder Photo</h3>
           {photoPreview && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
-              <img src={photoPreview} alt="Founder" style={{ height: '120px', objectFit: 'cover', borderRadius: '8px' }} />
-              <button className="btn btn-outline" onClick={handlePhotoRemove} disabled={saving === 'photo-remove'} style={{ color: 'var(--color-danger, #e53e3e)', borderColor: 'var(--color-danger, #e53e3e)' }}>
+            <div className="settings-preview-row">
+              <img src={photoPreview} alt="Founder" className="settings-photo-preview" />
+              <button className="btn btn-outline btn-danger" onClick={handlePhotoRemove} disabled={saving === 'photo-remove'}>
                 {saving === 'photo-remove' ? 'Removing...' : 'Remove'}
               </button>
             </div>
           )}
-          <input type="file" accept="image/*" onChange={(e) => { setPhotoFile(e.target.files[0]); setPhotoPreview(URL.createObjectURL(e.target.files[0])); }} />
-          <button className="btn btn-primary" style={{ marginTop: '12px' }} onClick={handlePhotoUpload} disabled={saving === 'photo' || !photoFile}>
+          <input className="settings-file-input" type="file" accept="image/*" onChange={(e) => { setPhotoFile(e.target.files[0]); setPhotoPreview(URL.createObjectURL(e.target.files[0])); }} />
+          <button className="btn btn-primary settings-save-btn" onClick={handlePhotoUpload} disabled={saving === 'photo' || !photoFile}>
             {saving === 'photo' ? 'Uploading...' : 'Save Photo'}
           </button>
         </div>
 
         {/* Contact & Social */}
         <div className="admin-form">
-          <h3 style={{ marginBottom: '16px' }}>Contact Details & Social Links</h3>
+          <h3 className="settings-section-title">Contact Details & Social Links</h3>
           <form onSubmit={handleContactSave}>
             {field('WhatsApp Number (international format)', 'whatsapp_number', 'tel')}
             {field('Contact Email (displayed in footer)', 'contact_email', 'email')}
@@ -173,7 +173,7 @@ const Settings = () => {
             {field('Twitter URL', 'twitter_url')}
             {field('Facebook URL', 'facebook_url')}
             {field('LinkedIn URL', 'linkedin_url')}
-            <button type="submit" className="btn btn-primary" disabled={saving === 'contact'}>
+            <button type="submit" className="btn btn-primary settings-save-btn" disabled={saving === 'contact'}>
               {saving === 'contact' ? 'Saving...' : 'Save Settings'}
             </button>
           </form>
@@ -181,11 +181,9 @@ const Settings = () => {
 
         {/* Change Password */}
         <div className="admin-form">
-          <h3 style={{ marginBottom: '16px' }}>Change Password</h3>
+          <h3 className="settings-section-title">Change Password</h3>
           {passwordError && (
-            <div style={{ color: 'var(--color-danger, #e53e3e)', marginBottom: '12px', fontSize: '14px' }}>
-              {passwordError}
-            </div>
+            <div className="settings-error">{passwordError}</div>
           )}
           <form onSubmit={handleChangePassword}>
             {[
@@ -223,7 +221,7 @@ const Settings = () => {
                 </div>
               </div>
             ))}
-            <button type="submit" className="btn btn-primary" disabled={saving === 'password'}>
+            <button type="submit" className="btn btn-primary settings-save-btn" disabled={saving === 'password'}>
               {saving === 'password' ? 'Changing...' : 'Change Password'}
             </button>
           </form>
