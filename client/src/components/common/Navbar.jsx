@@ -26,11 +26,8 @@ const Navbar = () => {
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar__inner">
         <Link to="/" className="navbar__logo" onClick={closeMenu}>
-          {logoUrl ? (
-            <img src={logoUrl} alt="Booky Editing Services" />
-          ) : (
-            <span className="navbar__logo-text">Booky Editing Services</span>
-          )}
+          {logoUrl && <img src={logoUrl} alt="Booky Editing Services" />}
+          <span className="navbar__logo-text">Booky Editing Services</span>
         </Link>
 
         <button

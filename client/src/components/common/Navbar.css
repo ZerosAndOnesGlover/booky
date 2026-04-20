@@ -22,9 +22,16 @@
   height: 100%;
 }
 
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .navbar__logo img {
-  height: 48px;
+  height: 40px;
   width: auto;
+  flex-shrink: 0;
 }
 
 .navbar__logo-text {
