@@ -61,7 +61,15 @@ const login = async (req, res, next) => {
         otp_code: otpHash,
         otp_expires_at: new Date(Date.now() + 10 * 60 * 1000),
       });
-      await sendOtpEmail(otp);
+      try {
+        await sendOtpEmail(otp);
+      } catch (emailErr) {
+        console.error('OTP email failed:', emailErr.message);
+        return res.status(500).json({
+          error: true,
+          message: 'Could not send verification code — email configuration issue. Check EMAIL_USER and EMAIL_PASS in server environment variables.',
+        });
+      }
       return res.status(200).json({ requiresOtp: true });
     }
 
