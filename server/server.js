@@ -22,8 +22,9 @@ app.set('trust proxy', 1);
 
 // --- Security Middleware ---
 app.use(helmet());
+// Support comma-separated list e.g. "https://old.vercel.app,https://new.vercel.app"
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
+  ...(process.env.FRONTEND_URL || '').split(',').map(u => u.trim()).filter(Boolean),
   // Allow any private network IP on the same port (for local client previews)
   /^http:\/\/(192\.168|10\.\d+|172\.(1[6-9]|2\d|3[01]))\.\d+\.\d+:5173$/,
 ];
