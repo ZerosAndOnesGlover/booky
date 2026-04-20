@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getAdminSettingsApi, updateSettingsApi, uploadLogoApi, uploadPhotoApi } from '../../services/api';
+import { getAdminSettingsApi, updateSettingsApi, uploadLogoApi, removeLogoApi, uploadPhotoApi, removePhotoApi } from '../../services/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 
 const Settings = () => {
@@ -53,6 +53,17 @@ const Settings = () => {
     setSaving('');
   };
 
+  const handleLogoRemove = async () => {
+    setSaving('logo-remove');
+    try {
+      await removeLogoApi(token);
+      setLogoPreview(null);
+      setLogoFile(null);
+      showToast('Logo removed.');
+    } catch { showToast('Failed to remove logo.'); }
+    setSaving('');
+  };
+
   const handlePhotoUpload = async () => {
     if (!photoFile) return;
     setSaving('photo');
@@ -63,6 +74,17 @@ const Settings = () => {
       setPhotoPreview(res.data.founder_photo_url);
       showToast('Photo updated successfully!');
     } catch { showToast('Photo upload failed.'); }
+    setSaving('');
+  };
+
+  const handlePhotoRemove = async () => {
+    setSaving('photo-remove');
+    try {
+      await removePhotoApi(token);
+      setPhotoPreview(null);
+      setPhotoFile(null);
+      showToast('Photo removed.');
+    } catch { showToast('Failed to remove photo.'); }
     setSaving('');
   };
 
@@ -82,7 +104,14 @@ const Settings = () => {
         {/* Logo */}
         <div className="admin-form">
           <h3 style={{ marginBottom: '16px' }}>Logo</h3>
-          {logoPreview && <img src={logoPreview} alt="Logo" style={{ height: '60px', marginBottom: '12px', objectFit: 'contain' }} />}
+          {logoPreview && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <img src={logoPreview} alt="Logo" style={{ height: '60px', objectFit: 'contain' }} />
+              <button className="btn btn-outline" onClick={handleLogoRemove} disabled={saving === 'logo-remove'} style={{ color: 'var(--color-danger, #e53e3e)', borderColor: 'var(--color-danger, #e53e3e)' }}>
+                {saving === 'logo-remove' ? 'Removing...' : 'Remove'}
+              </button>
+            </div>
+          )}
           <input type="file" accept="image/*" onChange={(e) => { setLogoFile(e.target.files[0]); setLogoPreview(URL.createObjectURL(e.target.files[0])); }} />
           <button className="btn btn-primary" style={{ marginTop: '12px' }} onClick={handleLogoUpload} disabled={saving === 'logo' || !logoFile}>
             {saving === 'logo' ? 'Uploading...' : 'Save Logo'}
@@ -92,7 +121,14 @@ const Settings = () => {
         {/* Founder Photo */}
         <div className="admin-form">
           <h3 style={{ marginBottom: '16px' }}>Founder Photo</h3>
-          {photoPreview && <img src={photoPreview} alt="Founder" style={{ height: '120px', marginBottom: '12px', objectFit: 'cover', borderRadius: '8px' }} />}
+          {photoPreview && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+              <img src={photoPreview} alt="Founder" style={{ height: '120px', objectFit: 'cover', borderRadius: '8px' }} />
+              <button className="btn btn-outline" onClick={handlePhotoRemove} disabled={saving === 'photo-remove'} style={{ color: 'var(--color-danger, #e53e3e)', borderColor: 'var(--color-danger, #e53e3e)' }}>
+                {saving === 'photo-remove' ? 'Removing...' : 'Remove'}
+              </button>
+            </div>
+          )}
           <input type="file" accept="image/*" onChange={(e) => { setPhotoFile(e.target.files[0]); setPhotoPreview(URL.createObjectURL(e.target.files[0])); }} />
           <button className="btn btn-primary" style={{ marginTop: '12px' }} onClick={handlePhotoUpload} disabled={saving === 'photo' || !photoFile}>
             {saving === 'photo' ? 'Uploading...' : 'Save Photo'}

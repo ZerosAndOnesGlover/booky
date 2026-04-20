@@ -69,8 +69,14 @@ export const updateSettingsApi = (token, data) => api.put('/api/admin/settings',
 export const uploadLogoApi = (token, data) => api.post('/api/admin/settings/logo', data, {
   headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
 });
+export const removeLogoApi = (token) => api.delete('/api/admin/settings/logo', {
+  headers: { Authorization: `Bearer ${token}` },
+});
 export const uploadPhotoApi = (token, data) => api.post('/api/admin/settings/photo', data, {
   headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+});
+export const removePhotoApi = (token) => api.delete('/api/admin/settings/photo', {
+  headers: { Authorization: `Bearer ${token}` },
 });
 
 // --- Admin: About ---

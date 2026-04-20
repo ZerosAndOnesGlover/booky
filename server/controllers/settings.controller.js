@@ -100,4 +100,38 @@ const uploadFounderPhoto = async (req, res, next) => {
   }
 };
 
-module.exports = { getSettings, updateSettings, uploadLogo, uploadFounderPhoto };
+// --- ADMIN: Remove logo ---
+const removeLogo = async (req, res, next) => {
+  try {
+    const [settings] = await SiteSettings.findOrCreate({
+      where: { id: 1 },
+      defaults: { whatsapp_number: '', contact_email: '' },
+    });
+
+    await deleteFromCloudinary(settings.logo_public_id);
+    await settings.update({ logo_url: null, logo_public_id: null });
+
+    return res.status(200).json({ message: 'Logo removed successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// --- ADMIN: Remove founder photo ---
+const removeFounderPhoto = async (req, res, next) => {
+  try {
+    const [settings] = await SiteSettings.findOrCreate({
+      where: { id: 1 },
+      defaults: { whatsapp_number: '', contact_email: '' },
+    });
+
+    await deleteFromCloudinary(settings.founder_photo_public_id);
+    await settings.update({ founder_photo_url: null, founder_photo_public_id: null });
+
+    return res.status(200).json({ message: 'Founder photo removed successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getSettings, updateSettings, uploadLogo, uploadFounderPhoto, removeLogo, removeFounderPhoto };
