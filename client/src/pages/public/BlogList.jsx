@@ -47,7 +47,7 @@ const BlogList = () => {
             <>
               <div className="grid-3">
                 {posts.map((post) => (
-                  <div key={post.id} className="card blog-card">
+                  <Link key={post.id} to={`/blog/${post.slug}`} className="card blog-card blog-card--link">
                     {post.cover_image_url && (
                       <img src={post.cover_image_url} alt={post.title} className="blog-card__image" />
                     )}
@@ -57,10 +57,10 @@ const BlogList = () => {
                       {post.meta_description && <p>{post.meta_description}</p>}
                       <div className="blog-card__footer">
                         <span>{new Date(post.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                        <Link to={`/blog/${post.slug}`}>Read More →</Link>
+                        <span className="blog-card__read-more">Read More →</span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
 
