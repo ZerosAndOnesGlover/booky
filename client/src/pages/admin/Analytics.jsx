@@ -141,8 +141,8 @@ const Analytics = () => {
                   <tbody>
                     {data.topPages.map((p, i) => (
                       <tr key={i}>
-                        <td data-label="Page" style={{ fontSize: '0.9rem' }}>{friendlyPath(p.path)}</td>
-                        <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{p.views}</td>
+                        <td data-label="Page">{friendlyPath(p.path)}</td>
+                        <td data-label="Views" className="analytics-num">{p.views}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -163,7 +163,7 @@ const Analytics = () => {
                     {data.topCountries.map((c, i) => (
                       <tr key={i}>
                         <td data-label="Country">{getCountryName(c.country)}</td>
-                        <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{c.views}</td>
+                        <td data-label="Views" className="analytics-num">{c.views}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -185,7 +185,7 @@ const Analytics = () => {
                   {data.dailyViews.map((d, i) => (
                     <tr key={i}>
                       <td data-label="Date">{new Date(d.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                      <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{d.views}</td>
+                      <td data-label="Views" className="analytics-num">{d.views}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -206,8 +206,8 @@ const Analytics = () => {
                   {data.topPosts.map((p) => (
                     <tr key={p.id}>
                       <td data-label="Title">{p.title}</td>
-                      <td data-label="Views" style={{ textAlign: 'right', fontWeight: 600 }}>{p.view_count}</td>
-                      <td data-label="Likes" style={{ textAlign: 'right', fontWeight: 600 }}>{p.like_count}</td>
+                      <td data-label="Views" className="analytics-num">{p.view_count}</td>
+                      <td data-label="Likes" className="analytics-num">{p.like_count}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -859,6 +859,12 @@
   gap: 24px;
 }
 
+/* Numeric value cells — right-aligned on desktop, handled by space-between on mobile */
+.admin-table td.analytics-num {
+  text-align: right;
+  font-weight: 600;
+}
+
 [data-theme="dark"] .analytics-select,
 [data-theme="dark"] .analytics-date {
   background: var(--color-secondary);
@@ -913,9 +919,10 @@
 
   .admin-table td {
     display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-xs);
-    padding: 8px 14px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 14px;
     border-bottom: 1px solid rgba(75, 46, 99, 0.05);
     font-size: 0.9rem;
     box-sizing: border-box;
@@ -923,7 +930,6 @@
 
   .admin-table td:last-child {
     border-bottom: none;
-    flex-wrap: wrap;
   }
 
   .admin-table td[data-label]::before {
@@ -933,9 +939,8 @@
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    min-width: 80px;
     flex-shrink: 0;
-    padding-top: 2px;
+    text-align: left;
   }
 
   /* Expanded detail row (Quotes) — full-width, no label */
