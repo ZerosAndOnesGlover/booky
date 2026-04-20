@@ -287,6 +287,13 @@ p:last-child { margin-bottom: 0; }
   transform: translateY(-4px);
 }
 
+@media (hover: none) {
+  .card:hover {
+    transform: none;
+    box-shadow: var(--shadow);
+  }
+}
+
 /* --- Grid --- */
 .grid-2 {
   display: grid;

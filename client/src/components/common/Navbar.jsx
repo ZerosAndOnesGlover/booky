@@ -12,7 +12,14 @@ const Navbar = () => {
 
   useEffect(() => {
     getSettingsApi().then((res) => {
-      setLogoUrl(res.data.settings.logo_url);
+      const url = res.data.settings.logo_url;
+      setLogoUrl(url);
+      if (url) {
+        const link = document.querySelector("link[rel='icon']") || document.createElement('link');
+        link.rel = 'icon';
+        link.href = url;
+        document.head.appendChild(link);
+      }
     }).catch(() => {});
 
     const handleScroll = () => setScrolled(window.scrollY > 20);

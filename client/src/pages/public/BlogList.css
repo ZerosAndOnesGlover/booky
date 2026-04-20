@@ -1,3 +1,18 @@
+/* page-hero is defined in global.css — these rules ensure it's available
+   regardless of which CSS file loads first */
+.page-hero {
+  background-color: var(--color-primary);
+  padding: var(--spacing-xxl) 0 var(--spacing-xl);
+  text-align: center;
+}
+
+.page-hero h1 { color: var(--color-white); margin-bottom: var(--spacing-sm); }
+.page-hero p  { color: rgba(255,255,255,0.8); font-size: 1.1rem; margin: 0; }
+
+[data-theme="dark"] .page-hero { background-color: #251535; }
+[data-theme="dark"] .page-hero h1 { color: var(--color-text); }
+[data-theme="dark"] .page-hero p  { color: var(--color-grey); }
+
 .blog-card {
   padding: 0;
   overflow: hidden;
