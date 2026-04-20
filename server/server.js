@@ -18,6 +18,7 @@ const commentRoutes = require('./routes/comment.routes');
 const aiRoutes = require('./routes/ai.routes');
 
 const app = express();
+app.set('trust proxy', 1);
 
 // --- Security Middleware ---
 app.use(helmet());
@@ -79,7 +80,6 @@ sequelize.authenticate()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Booky API running on port ${PORT}`);
-      console.log(`FRONTEND_URL: ${process.env.FRONTEND_URL}`);
     });
   })
   .catch((err) => {
