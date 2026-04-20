@@ -79,6 +79,7 @@ sequelize.authenticate()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Booky API running on port ${PORT}`);
+      console.log(`FRONTEND_URL: ${process.env.FRONTEND_URL}`);
     });
   })
   .catch((err) => {
