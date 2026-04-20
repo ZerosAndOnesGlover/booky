@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/common/Layout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ScrollToTop from './components/common/ScrollToTop';
+import { getSettingsApi } from './services/api';
 
 // Public Pages
 import Home from './pages/public/Home';
@@ -29,6 +31,18 @@ import Comments from './pages/admin/Comments';
 import AdminAI from './pages/admin/AdminAI';
 
 const App = () => {
+  useEffect(() => {
+    getSettingsApi().then((res) => {
+      const url = res.data.settings.logo_url;
+      if (url) {
+        const link = document.querySelector("link[rel='icon']") || document.createElement('link');
+        link.rel = 'icon';
+        link.href = url;
+        document.head.appendChild(link);
+      }
+    }).catch(() => {});
+  }, []);
+
   return (
     <>
     <ScrollToTop />
