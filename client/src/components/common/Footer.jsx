@@ -61,8 +61,9 @@ const Footer = () => {
           <p className="footer__maker">
             Built by{' '}
             <a href="https://adebayoglover.vercel.app" target="_blank" rel="noopener noreferrer">
-              GloverSoft Inc.
+              Adebayo Glover
             </a>
+            {' '}for GloverSoft Inc.
           </p>
           <Link to="/admin/login" className="footer__admin-link">Admin</Link>
         </div>

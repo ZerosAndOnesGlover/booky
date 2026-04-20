@@ -18,12 +18,16 @@ api.interceptors.request.use((config) => {
 
 // --- Auth ---
 export const loginApi = (data) => api.post('/api/auth/login', data);
+export const verifyOtpApi = (data) => api.post('/api/auth/verify-otp', data);
 export const logoutApi = () => api.post('/api/auth/logout');
 export const verifyApi = (token) => api.get('/api/auth/verify', {
   headers: { Authorization: `Bearer ${token}` },
 });
 export const forgotPasswordApi = (data) => api.post('/api/auth/forgot-password', data);
 export const resetPasswordApi = (data) => api.post('/api/auth/reset-password', data);
+export const changePasswordApi = (token, data) => api.post('/api/auth/change-password', data, {
+  headers: { Authorization: `Bearer ${token}` },
+});
 
 // --- Public ---
 export const getSettingsApi = () => api.get('/api/public/settings');

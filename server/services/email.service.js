@@ -107,4 +107,29 @@ const sendWhatsAppNotification = async (whatsappNumber, submission) => {
   });
 };
 
-module.exports = { sendPasswordResetEmail, sendQuoteNotificationEmail, sendWhatsAppNotification };
+// --- OTP / 2FA EMAIL ---
+const sendOtpEmail = async (otp) => {
+  const transporter = createTransporter();
+
+  const mailOptions = {
+    from: `"Booky Admin" <${process.env.EMAIL_USER}>`,
+    to: process.env.NOTIFICATION_EMAIL,
+    subject: 'Booky Admin — Login Verification Code',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #4B2E63;">Login Verification Code</h2>
+        <p>A login attempt was made from an unrecognized device.</p>
+        <p>Your one-time verification code is:</p>
+        <div style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #4B2E63; margin: 24px 0; padding: 16px; background: #f5f0fa; border-radius: 8px; text-align: center;">${otp}</div>
+        <p>This code expires in <strong>10 minutes</strong>.</p>
+        <p>If you did not attempt to log in, your password may have been compromised — change it immediately.</p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="color: #888; font-size: 12px;">Booky Editing Services &mdash; Admin Panel</p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+module.exports = { sendPasswordResetEmail, sendQuoteNotificationEmail, sendWhatsAppNotification, sendOtpEmail };

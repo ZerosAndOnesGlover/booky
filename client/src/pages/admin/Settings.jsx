@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getAdminSettingsApi, updateSettingsApi, uploadLogoApi, removeLogoApi, uploadPhotoApi, removePhotoApi } from '../../services/api';
+import { getAdminSettingsApi, updateSettingsApi, uploadLogoApi, removeLogoApi, uploadPhotoApi, removePhotoApi, changePasswordApi } from '../../services/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 
 const Settings = () => {
@@ -12,6 +12,9 @@ const Settings = () => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [photoFile, setPhotoFile] = useState(null);
+  const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false });
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     getAdminSettingsApi(token).then((res) => {
@@ -88,6 +91,31 @@ const Settings = () => {
     setSaving('');
   };
 
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      setPasswordError('New passwords do not match.');
+      return;
+    }
+    if (passwords.newPassword.length < 8) {
+      setPasswordError('New password must be at least 8 characters.');
+      return;
+    }
+    setSaving('password');
+    try {
+      await changePasswordApi(token, {
+        currentPassword: passwords.currentPassword,
+        newPassword: passwords.newPassword,
+      });
+      setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      showToast('Password changed successfully!');
+    } catch (err) {
+      setPasswordError(err.response?.data?.message || 'Failed to change password.');
+    }
+    setSaving('');
+  };
+
   const field = (label, key, type = 'text') => (
     <div className="form-group">
       <label>{label}</label>
@@ -147,6 +175,56 @@ const Settings = () => {
             {field('LinkedIn URL', 'linkedin_url')}
             <button type="submit" className="btn btn-primary" disabled={saving === 'contact'}>
               {saving === 'contact' ? 'Saving...' : 'Save Settings'}
+            </button>
+          </form>
+        </div>
+
+        {/* Change Password */}
+        <div className="admin-form">
+          <h3 style={{ marginBottom: '16px' }}>Change Password</h3>
+          {passwordError && (
+            <div style={{ color: 'var(--color-danger, #e53e3e)', marginBottom: '12px', fontSize: '14px' }}>
+              {passwordError}
+            </div>
+          )}
+          <form onSubmit={handleChangePassword}>
+            {[
+              { label: 'Current Password', key: 'currentPassword', showKey: 'current' },
+              { label: 'New Password', key: 'newPassword', showKey: 'new' },
+              { label: 'Confirm New Password', key: 'confirmPassword', showKey: 'confirm' },
+            ].map(({ label, key, showKey }) => (
+              <div className="form-group" key={key}>
+                <label>{label}</label>
+                <div className="admin-auth__password-wrap">
+                  <input
+                    type={showPasswords[showKey] ? 'text' : 'password'}
+                    value={passwords[key]}
+                    onChange={(e) => setPasswords(p => ({ ...p, [key]: e.target.value }))}
+                  />
+                  <button
+                    type="button"
+                    className="admin-auth__eye"
+                    onClick={() => setShowPasswords(s => ({ ...s, [showKey]: !s[showKey] }))}
+                    aria-label={showPasswords[showKey] ? 'Hide' : 'Show'}
+                  >
+                    {showPasswords[showKey] ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ))}
+            <button type="submit" className="btn btn-primary" disabled={saving === 'password'}>
+              {saving === 'password' ? 'Changing...' : 'Change Password'}
             </button>
           </form>
         </div>

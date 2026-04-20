@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/common/Layout';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Public Pages
 import Home from './pages/public/Home';
@@ -29,6 +30,8 @@ import AdminAI from './pages/admin/AdminAI';
 
 const App = () => {
   return (
+    <>
+    <ScrollToTop />
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<Layout><Home /></Layout>} />
@@ -58,6 +61,7 @@ const App = () => {
       {/* 404 */}
       <Route path="*" element={<Layout><NotFound /></Layout>} />
     </Routes>
+    </>
   );
 };
 

@@ -26,6 +26,25 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  otp_code: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  otp_expires_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  known_device_tokens: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    get() {
+      const val = this.getDataValue('known_device_tokens');
+      return val ? JSON.parse(val) : [];
+    },
+    set(val) {
+      this.setDataValue('known_device_tokens', JSON.stringify(val));
+    },
+  },
 }, {
   tableName: 'admins',
   timestamps: true,

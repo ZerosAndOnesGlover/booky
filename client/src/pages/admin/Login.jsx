@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { loginApi } from '../../services/api';
+import { loginApi, verifyOtpApi } from '../../services/api';
 import './Admin.css';
 
 const Login = () => {
@@ -10,18 +10,88 @@ const Login = () => {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [otpStep, setOtpStep] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpError, setOtpError] = useState('');
+  const [otpSubmitting, setOtpSubmitting] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
   const onSubmit = async (data) => {
     setServerError('');
     try {
       const res = await loginApi(data);
-      login(res.data.token, res.data.user);
-      navigate('/admin');
+      if (res.data.requiresOtp) {
+        setPendingEmail(data.email);
+        setOtpStep(true);
+      } else {
+        login(res.data.token, res.data.user);
+        navigate('/admin');
+      }
     } catch (err) {
       setServerError(err.response?.data?.message || 'Login failed. Please try again.');
     }
   };
+
+  const onOtpSubmit = async (e) => {
+    e.preventDefault();
+    setOtpError('');
+    if (otp.length !== 6 || !/^\d+$/.test(otp)) {
+      setOtpError('Please enter the 6-digit code.');
+      return;
+    }
+    setOtpSubmitting(true);
+    try {
+      const res = await verifyOtpApi({ email: pendingEmail, otp });
+      login(res.data.token, res.data.user);
+      navigate('/admin');
+    } catch (err) {
+      setOtpError(err.response?.data?.message || 'Verification failed. Please try again.');
+    }
+    setOtpSubmitting(false);
+  };
+
+  if (otpStep) {
+    return (
+      <div className="admin-auth">
+        <div className="admin-auth__box">
+          <h1>Verify Your Identity</h1>
+          <p>A 6-digit code was sent to <strong>bookyeditingservices@gmail.com</strong>. Enter it below to continue.</p>
+
+          {otpError && <div className="admin-auth__error">{otpError}</div>}
+
+          <form onSubmit={onOtpSubmit} noValidate>
+            <div className="form-group">
+              <label>Verification Code</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="000000"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                style={{ letterSpacing: '0.3em', fontSize: '1.4rem', textAlign: 'center' }}
+                autoFocus
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={otpSubmitting}>
+              {otpSubmitting ? 'Verifying...' : 'Verify →'}
+            </button>
+          </form>
+
+          <button
+            type="button"
+            className="admin-auth__forgot"
+            style={{ marginTop: '16px', background: 'none', border: 'none', cursor: 'pointer' }}
+            onClick={() => { setOtpStep(false); setOtp(''); setOtpError(''); }}
+          >
+            ← Back to login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-auth">

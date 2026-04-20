@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const Admin = require('../models/Admin');
 const PasswordResetToken = require('../models/PasswordResetToken');
-const { sendPasswordResetEmail } = require('../services/email.service');
+const { sendPasswordResetEmail, sendOtpEmail } = require('../services/email.service');
 
 // --- LOGIN ---
 const login = async (req, res, next) => {
@@ -43,24 +43,101 @@ const login = async (req, res, next) => {
     // Reset login attempts on success
     await admin.update({ login_attempts: 0, lock_until: null });
 
-    const token = jwt.sign(
-      { id: admin.id, email: admin.email },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    );
+    // --- Device check for 2FA ---
+    const deviceId = req.cookies?.booky_device_id;
+    const knownTokens = admin.known_device_tokens || [];
 
-    res.cookie('booky_token', token, {
+    let deviceKnown = false;
+    if (deviceId) {
+      const deviceHash = crypto.createHash('sha256').update(deviceId).digest('hex');
+      deviceKnown = knownTokens.includes(deviceHash);
+    }
+
+    if (!deviceKnown) {
+      // Unknown device — send OTP
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
+      await admin.update({
+        otp_code: otpHash,
+        otp_expires_at: new Date(Date.now() + 10 * 60 * 1000),
+      });
+      await sendOtpEmail(otp);
+      return res.status(200).json({ requiresOtp: true });
+    }
+
+    // Known device — issue token directly
+    return issueToken(res, admin);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Helper to sign JWT and respond
+const issueToken = (res, admin) => {
+  const token = jwt.sign(
+    { id: admin.id, email: admin.email },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
+  );
+
+  res.cookie('booky_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  return res.status(200).json({
+    message: 'Login successful',
+    token,
+    user: { id: admin.id, email: admin.email },
+  });
+};
+
+// --- VERIFY OTP ---
+const verifyOtp = async (req, res, next) => {
+  try {
+    const { email, otp } = req.body;
+
+    const admin = await Admin.findOne({ where: { email: email.toLowerCase().trim() } });
+
+    if (!admin || !admin.otp_code) {
+      return res.status(400).json({ error: true, message: 'Invalid or expired code.' });
+    }
+
+    if (new Date(admin.otp_expires_at) < new Date()) {
+      await admin.update({ otp_code: null, otp_expires_at: null });
+      return res.status(400).json({ error: true, message: 'Verification code has expired. Please log in again.' });
+    }
+
+    const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
+    if (otpHash !== admin.otp_code) {
+      return res.status(400).json({ error: true, message: 'Invalid verification code.' });
+    }
+
+    // Generate and store new device token
+    const deviceToken = crypto.randomBytes(32).toString('hex');
+    const deviceHash = crypto.createHash('sha256').update(deviceToken).digest('hex');
+
+    const knownTokens = admin.known_device_tokens || [];
+    knownTokens.push(deviceHash);
+    if (knownTokens.length > 5) knownTokens.shift(); // Keep last 5 devices
+
+    await admin.update({
+      otp_code: null,
+      otp_expires_at: null,
+      known_device_tokens: knownTokens,
+    });
+
+    // Set long-lived device cookie
+    res.cookie('booky_device_id', deviceToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
     });
 
-    return res.status(200).json({
-      message: 'Login successful',
-      token,
-      user: { id: admin.id, email: admin.email },
-    });
+    return issueToken(res, admin);
   } catch (err) {
     next(err);
   }
@@ -77,6 +154,30 @@ const verify = (req, res) => {
   return res.status(200).json({
     user: { id: req.user.id, email: req.user.email },
   });
+};
+
+// --- CHANGE PASSWORD ---
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    const admin = await Admin.findByPk(req.user.id);
+    if (!admin) {
+      return res.status(404).json({ error: true, message: 'Admin not found.' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, admin.password_hash);
+    if (!isMatch) {
+      return res.status(400).json({ error: true, message: 'Current password is incorrect.' });
+    }
+
+    const password_hash = await bcrypt.hash(newPassword, 12);
+    await admin.update({ password_hash });
+
+    return res.status(200).json({ message: 'Password changed successfully.' });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // --- FORGOT PASSWORD ---
@@ -137,4 +238,4 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-module.exports = { login, logout, verify, forgotPassword, resetPassword };
+module.exports = { login, verifyOtp, logout, verify, changePassword, forgotPassword, resetPassword };
