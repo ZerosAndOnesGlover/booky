@@ -43,6 +43,9 @@ const Login = () => {
     setOtpSubmitting(true);
     try {
       const res = await verifyOtpApi({ email: pendingEmail, otp });
+      if (res.data.deviceToken) {
+        localStorage.setItem('booky_device_id', res.data.deviceToken);
+      }
       login(res.data.token, res.data.user);
       navigate('/admin');
     } catch (err) {

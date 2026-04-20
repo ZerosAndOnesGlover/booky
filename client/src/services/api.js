@@ -17,7 +17,12 @@ api.interceptors.request.use((config) => {
 });
 
 // --- Auth ---
-export const loginApi = (data) => api.post('/api/auth/login', data);
+export const loginApi = (data) => {
+  const deviceId = localStorage.getItem('booky_device_id');
+  return api.post('/api/auth/login', data, {
+    headers: deviceId ? { 'X-Device-ID': deviceId } : {},
+  });
+};
 export const verifyOtpApi = (data) => api.post('/api/auth/verify-otp', data);
 export const logoutApi = () => api.post('/api/auth/logout');
 export const verifyApi = (token) => api.get('/api/auth/verify', {

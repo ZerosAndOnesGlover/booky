@@ -44,7 +44,8 @@ const login = async (req, res, next) => {
     await admin.update({ login_attempts: 0, lock_until: null });
 
     // --- Device check for 2FA ---
-    const deviceId = req.cookies?.booky_device_id;
+    // Device ID is sent as a header (stored in localStorage on client) to work cross-origin
+    const deviceId = req.headers['x-device-id'];
     const knownTokens = admin.known_device_tokens || [];
 
     let deviceKnown = false;
@@ -81,25 +82,24 @@ const login = async (req, res, next) => {
 };
 
 // Helper to sign JWT and respond
-const issueToken = (res, admin) => {
+const issueToken = (res, admin, deviceToken = null) => {
   const token = jwt.sign(
     { id: admin.id, email: admin.email },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );
 
-  res.cookie('booky_token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  return res.status(200).json({
+  const response = {
     message: 'Login successful',
     token,
     user: { id: admin.id, email: admin.email },
-  });
+  };
+
+  if (deviceToken) {
+    response.deviceToken = deviceToken;
+  }
+
+  return res.status(200).json(response);
 };
 
 // --- VERIFY OTP ---
@@ -137,15 +137,8 @@ const verifyOtp = async (req, res, next) => {
       known_device_tokens: knownTokens,
     });
 
-    // Set long-lived device cookie
-    res.cookie('booky_device_id', deviceToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
-    });
-
-    return issueToken(res, admin);
+    // Return device token to client — stored in localStorage, sent as X-Device-ID header
+    return issueToken(res, admin, deviceToken);
   } catch (err) {
     next(err);
   }
