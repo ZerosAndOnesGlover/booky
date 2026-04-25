@@ -15,8 +15,9 @@
 .footer__logo {
   height: 48px;
   width: auto;
+  max-width: 200px;
+  object-fit: contain;
   margin-bottom: var(--spacing-sm);
-  filter: brightness(0) invert(1);
 }
 
 .footer__logo-text {

@@ -15,7 +15,12 @@ const Footer = () => {
       <div className="container footer__inner">
         <div className="footer__brand">
           {settings?.logo_url ? (
-            <img src={settings.logo_url} alt="Booky Editing Services" className="footer__logo" />
+            <img
+            src={settings.logo_url}
+            alt="Booky Editing Services"
+            className="footer__logo"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
           ) : (
             <span className="footer__logo-text">Booky Editing Services</span>
           )}
