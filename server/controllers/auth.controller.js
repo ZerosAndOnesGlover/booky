@@ -56,7 +56,7 @@ const login = async (req, res, next) => {
 
     if (!deviceKnown) {
       // Unknown device — send OTP
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otp = crypto.randomInt(100000, 1000000).toString();
       const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
       await admin.update({
         otp_code: otpHash,
@@ -71,7 +71,9 @@ const login = async (req, res, next) => {
           message: 'Could not send verification code — email configuration issue. Check EMAIL_USER and EMAIL_PASS in server environment variables.',
         });
       }
-      return res.status(200).json({ requiresOtp: true });
+      const notifEmail = process.env.NOTIFICATION_EMAIL || '';
+      const maskedEmail = notifEmail.replace(/(.{2}).+(@.+)/, '$1***$2');
+      return res.status(200).json({ requiresOtp: true, maskedEmail });
     }
 
     // Known device — issue token directly
@@ -193,8 +195,9 @@ const forgotPassword = async (req, res, next) => {
       return res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
     }
 
-    // Invalidate any existing tokens
+    // Invalidate existing tokens and purge globally expired ones
     await PasswordResetToken.destroy({ where: { admin_id: admin.id } });
+    await PasswordResetToken.destroy({ where: { expires_at: { [require('sequelize').Op.lt]: new Date() } } });
 
     const rawToken = crypto.randomBytes(32).toString('hex');
     const token_hash = crypto.createHash('sha256').update(rawToken).digest('hex');
@@ -202,7 +205,8 @@ const forgotPassword = async (req, res, next) => {
 
     await PasswordResetToken.create({ admin_id: admin.id, token_hash, expires_at });
 
-    const resetUrl = `${process.env.FRONTEND_URL}/admin/reset-password?token=${rawToken}`;
+    const primaryFrontend = (process.env.FRONTEND_URL || '').split(',')[0].trim();
+    const resetUrl = `${primaryFrontend}/admin/reset-password?token=${rawToken}`;
     await sendPasswordResetEmail(admin.email, resetUrl);
 
     return res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
@@ -231,7 +235,7 @@ const resetPassword = async (req, res, next) => {
 
     const password_hash = await bcrypt.hash(newPassword, 12);
     await Admin.update({ password_hash }, { where: { id: resetToken.admin_id } });
-    await resetToken.update({ used: true });
+    await resetToken.destroy();
 
     return res.status(200).json({ message: 'Password reset successful. You can now log in.' });
   } catch (err) {

@@ -132,6 +132,13 @@ const chat = async (req, res, next) => {
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: true, message: 'messages array is required.' });
     }
+    if (messages.length > 50) {
+      return res.status(400).json({ error: true, message: 'Too many messages in conversation.' });
+    }
+    const totalChars = messages.reduce((sum, m) => sum + String(m.content || '').length, 0);
+    if (totalChars > 100000) {
+      return res.status(400).json({ error: true, message: 'Message content too large.' });
+    }
 
     if (!process.env.ANTHROPIC_API_KEY) {
       return res.status(503).json({ error: true, message: 'AI service is not configured. Add ANTHROPIC_API_KEY to your server .env file.' });

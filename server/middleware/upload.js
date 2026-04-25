@@ -6,7 +6,7 @@ const { Readable } = require('stream');
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-  const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+  const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
   const allowedDocTypes = [
     'application/pdf',
     'application/msword',
@@ -18,7 +18,7 @@ const fileFilter = (req, file, cb) => {
   if (allAllowed.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only images (JPG, PNG, WEBP, SVG) and documents (PDF, DOC, DOCX) are allowed.'), false);
+    cb(new Error('Invalid file type. Only images (JPG, PNG, WEBP) and documents (PDF, DOC, DOCX) are allowed.'), false);
   }
 };
 

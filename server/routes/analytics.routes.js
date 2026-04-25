@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { recordPageView, getAnalytics } = require('../controllers/analytics.controller');
+const { recordPageView, getAnalytics, getDashboardStats } = require('../controllers/analytics.controller');
 const authMiddleware = require('../middleware/auth');
 const { body, validationResult } = require('express-validator');
 const rateLimit = require('express-rate-limit');
@@ -22,8 +22,8 @@ const handleValidation = (req, res, next) => {
 router.post('/public/analytics/pageview',
   pageViewLimiter,
   [
-    body('path').notEmpty().withMessage('path is required'),
-    body('session_id').notEmpty().withMessage('session_id is required'),
+    body('path').notEmpty().isLength({ max: 500 }).withMessage('path is required and must be under 500 characters'),
+    body('session_id').notEmpty().isLength({ max: 128 }).withMessage('session_id is required and must be under 128 characters'),
   ],
   handleValidation,
   recordPageView
@@ -31,5 +31,8 @@ router.post('/public/analytics/pageview',
 
 // GET /api/admin/analytics
 router.get('/admin/analytics', authMiddleware, getAnalytics);
+
+// GET /api/admin/dashboard-stats
+router.get('/admin/dashboard-stats', authMiddleware, getDashboardStats);
 
 module.exports = router;

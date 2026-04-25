@@ -15,6 +15,7 @@ const Login = () => {
   const [otp, setOtp] = useState('');
   const [otpError, setOtpError] = useState('');
   const [otpSubmitting, setOtpSubmitting] = useState(false);
+  const [maskedEmail, setMaskedEmail] = useState('');
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
   const onSubmit = async (data) => {
@@ -23,6 +24,7 @@ const Login = () => {
       const res = await loginApi(data);
       if (res.data.requiresOtp) {
         setPendingEmail(data.email);
+        setMaskedEmail(res.data.maskedEmail || '');
         setOtpStep(true);
       } else {
         login(res.data.token, res.data.user);
@@ -59,7 +61,7 @@ const Login = () => {
       <div className="admin-auth">
         <div className="admin-auth__box">
           <h1>Verify Your Identity</h1>
-          <p>A 6-digit code was sent to <strong>bookyeditingservices@gmail.com</strong>. Enter it below to continue.</p>
+          <p>A 6-digit code was sent to <strong>{maskedEmail || 'your notification email'}</strong>. Enter it below to continue.</p>
 
           {otpError && <div className="admin-auth__error">{otpError}</div>}
 

@@ -11,17 +11,21 @@ const generateUniqueSlug = async (title, excludeId = null) => {
 
   let slug = baseSlug;
   let counter = 1;
+  const MAX_ATTEMPTS = 100;
 
-  while (true) {
+  while (counter <= MAX_ATTEMPTS) {
     const where = { slug };
     if (excludeId) where.id = { [Op.ne]: excludeId };
 
     const existing = await BlogPost.findOne({ where });
-
     if (!existing) break;
 
     slug = `${baseSlug}-${counter}`;
     counter++;
+  }
+
+  if (counter > MAX_ATTEMPTS) {
+    slug = `${baseSlug}-${Date.now()}`;
   }
 
   return slug;

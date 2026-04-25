@@ -48,7 +48,7 @@ const BlogEdit = () => {
         setCoverPreview(p.cover_image_url);
       }).catch(() => {}).finally(() => setLoading(false));
     }
-  }, [id]);
+  }, [id, token]);
 
   useEffect(() => {
     if (!isEdit && title) {
@@ -64,6 +64,7 @@ const BlogEdit = () => {
   const handleCoverChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (coverPreview?.startsWith('blob:')) URL.revokeObjectURL(coverPreview);
       setCoverFile(file);
       setCoverPreview(URL.createObjectURL(file));
     }

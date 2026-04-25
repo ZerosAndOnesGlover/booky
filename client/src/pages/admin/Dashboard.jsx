@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getAllPostsApi, getQuotesApi, getAdminCommentsApi } from '../../services/api';
+import { getDashboardStatsApi, getQuotesApi } from '../../services/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 
 const Dashboard = () => {
@@ -10,21 +10,11 @@ const Dashboard = () => {
   const [recentQuotes, setRecentQuotes] = useState([]);
 
   useEffect(() => {
-    getAllPostsApi(token).then((res) => {
-      const published = res.data.posts.filter(p => p.status === 'published').length;
-      const drafts = res.data.posts.filter(p => p.status === 'draft').length;
-      setStats(s => ({ ...s, published, drafts }));
+    getDashboardStatsApi(token).then((res) => {
+      const { published, drafts, unreadQuotes, pendingComments } = res.data;
+      setStats({ published, drafts, unread: unreadQuotes, pendingComments });
     }).catch(() => {});
 
-    getQuotesApi(token, 'unread').then((res) => {
-      setStats(s => ({ ...s, unread: res.data.total }));
-    }).catch(() => {});
-
-    getAdminCommentsApi(token, 'pending').then((res) => {
-      setStats(s => ({ ...s, pendingComments: res.data.total ?? res.data.comments?.length ?? 0 }));
-    }).catch(() => {});
-
-    // Recent submissions (any status) for the table
     getQuotesApi(token, '', 1).then((res) => {
       setRecentQuotes(res.data.quotes.slice(0, 5));
     }).catch(() => {});

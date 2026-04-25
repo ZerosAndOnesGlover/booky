@@ -39,9 +39,15 @@ router.post('/public/quote', quoteLimiter, upload.single('manuscript'),
     body('phone').notEmpty().withMessage('Phone number is required'),
     body('book_title').notEmpty().withMessage('Book title is required'),
     body('genre').notEmpty().withMessage('Genre is required'),
-    body('word_count').isInt({ min: 1 }).withMessage('Word count must be a positive number'),
+    body('word_count').isInt({ min: 1, max: 2000000 }).withMessage('Word count must be between 1 and 2,000,000'),
     body('editing_type').isIn(EDITING_TYPES).withMessage('Invalid editing type selected'),
-    body('deadline').isDate().withMessage('Valid deadline date is required'),
+    body('deadline').isDate().withMessage('Valid deadline date is required')
+      .custom((value) => {
+        if (new Date(value) < new Date(new Date().toDateString())) {
+          throw new Error('Deadline cannot be in the past');
+        }
+        return true;
+      }),
   ],
   handleValidation,
   submitQuote

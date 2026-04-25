@@ -1,5 +1,7 @@
 const PageView = require('../models/PageView');
 const BlogPost = require('../models/BlogPost');
+const QuoteSubmission = require('../models/QuoteSubmission');
+const BlogComment = require('../models/BlogComment');
 const { Op, fn, col, literal } = require('sequelize');
 let geoip;
 try { geoip = require('geoip-lite'); } catch {}
@@ -191,4 +193,19 @@ const getAnalytics = async (req, res, next) => {
   }
 };
 
-module.exports = { recordPageView, getAnalytics };
+// --- ADMIN: Lightweight dashboard counts (avoids fetching all rows) ---
+const getDashboardStats = async (req, res, next) => {
+  try {
+    const [published, drafts, unreadQuotes, pendingComments] = await Promise.all([
+      BlogPost.count({ where: { status: 'published' } }),
+      BlogPost.count({ where: { status: 'draft' } }),
+      QuoteSubmission.count({ where: { is_read: false } }),
+      BlogComment.count({ where: { is_approved: false } }),
+    ]);
+    return res.status(200).json({ published, drafts, unreadQuotes, pendingComments });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { recordPageView, getAnalytics, getDashboardStats };

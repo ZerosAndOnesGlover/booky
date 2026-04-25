@@ -12,7 +12,7 @@ const { Op } = require('sequelize');
 const getPublishedPosts = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 9;
+    const limit = Math.min(parseInt(req.query.limit) || 9, 50);
     const offset = (page - 1) * limit;
 
     const { count, rows } = await BlogPost.findAndCountAll({
@@ -74,7 +74,7 @@ const toggleLike = async (req, res, next) => {
     let liked;
     if (existing) {
       await existing.destroy();
-      await post.decrement('like_count');
+      if (post.like_count > 0) await post.decrement('like_count');
       liked = false;
     } else {
       await BlogLike.create({ post_id: post.id, session_id });
@@ -93,7 +93,10 @@ const toggleLike = async (req, res, next) => {
 const getAllPosts = async (req, res, next) => {
   try {
     const where = {};
-    if (req.query.status) where.status = req.query.status;
+    const VALID_STATUSES = ['draft', 'published'];
+    if (req.query.status && VALID_STATUSES.includes(req.query.status)) {
+      where.status = req.query.status;
+    }
 
     const posts = await BlogPost.findAll({
       where,

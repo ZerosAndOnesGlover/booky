@@ -113,6 +113,11 @@ export const deleteTestimonialApi = (token, id) => api.delete(`/api/admin/testim
   headers: { Authorization: `Bearer ${token}` },
 });
 
+// --- Admin: Dashboard ---
+export const getDashboardStatsApi = (token) => api.get('/api/admin/dashboard-stats', {
+  headers: { Authorization: `Bearer ${token}` },
+});
+
 // --- Admin: Analytics ---
 export const getAnalyticsApi = (token, range = '30d', startDate = '', endDate = '') => {
   const params = new URLSearchParams({ range });
