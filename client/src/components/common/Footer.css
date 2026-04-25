@@ -12,12 +12,23 @@
   padding-bottom: var(--spacing-xl);
 }
 
-.footer__logo {
-  height: 48px;
-  width: auto;
-  max-width: 200px;
-  object-fit: contain;
+.footer__brand-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: var(--spacing-sm);
+}
+
+.footer__brand-name .footer__logo-text {
+  margin-bottom: 0;
+}
+
+.footer__logo {
+  height: 40px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .footer__logo-text {
@@ -25,8 +36,6 @@
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--color-white);
-  display: block;
-  margin-bottom: var(--spacing-sm);
 }
 
 .footer__brand p {

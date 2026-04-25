@@ -14,16 +14,17 @@ const Footer = () => {
     <footer className="footer">
       <div className="container footer__inner">
         <div className="footer__brand">
-          {settings?.logo_url ? (
-            <img
-            src={settings.logo_url}
-            alt="Booky Editing Services"
-            className="footer__logo"
-            onError={(e) => { e.target.style.display = 'none'; }}
-          />
-          ) : (
+          <div className="footer__brand-name">
+            {settings?.logo_url && (
+              <img
+                src={settings.logo_url}
+                alt="Booky Editing Services"
+                className="footer__logo"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            )}
             <span className="footer__logo-text">Booky Editing Services</span>
-          )}
+          </div>
           <p>Professional editing and publishing support for authors who want clarity, confidence, and excellence.</p>
         </div>
 
