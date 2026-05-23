@@ -34,7 +34,9 @@ app.use(cors({
     if (!origin || allowedOrigins.some(o => typeof o === 'string' ? o === origin : o.test(origin))) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      const err = new Error('Not allowed by CORS');
+      err.status = 403;
+      callback(err);
     }
   },
   credentials: true,
