@@ -44,7 +44,7 @@ const AdminLayout = ({ children }) => {
           <span></span>
           <span></span>
         </button>
-        <span className="admin-topbar__brand">Booky Admin</span>
+        <span className="admin-topbar__brand">Booky Editing Services Admin</span>
       </div>
 
       {/* Sidebar backdrop */}
@@ -54,7 +54,7 @@ const AdminLayout = ({ children }) => {
 
       <aside className={`admin-sidebar ${sidebarOpen ? 'admin-sidebar--open' : ''}`}>
         <div className="admin-sidebar__header">
-          <h2>Booky Admin</h2>
+          <h2>Booky Editing Services Admin</h2>
           <span>Content Management</span>
         </div>
         <nav className="admin-sidebar__nav" onClick={closeMenu}>
@@ -70,7 +70,7 @@ const AdminLayout = ({ children }) => {
             {pendingComments > 0 && <span className="badge">{pendingComments}</span>}
           </NavLink>
           <NavLink to="/admin/analytics">📊 Analytics</NavLink>
-          <NavLink to="/admin/ai">✦ Booky AI</NavLink>
+          <NavLink to="/admin/ai">✦ Booky Editing Services AI</NavLink>
           <NavLink to="/admin/settings">⚙️ Settings</NavLink>
           <NavLink to="/admin/about">📄 About Page</NavLink>
           <a href="https://bookyeditingservices.com" target="_blank" rel="noopener noreferrer">🌐 View Website</a>

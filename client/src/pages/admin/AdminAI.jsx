@@ -24,7 +24,7 @@ const MessageBubble = ({ msg }) => {
   const isUser = msg.role === 'user';
   return (
     <div className={`ai-bubble ai-bubble--${isUser ? 'user' : 'ai'}`}>
-      {!isUser && <div className="ai-bubble__label">Booky AI</div>}
+      {!isUser && <div className="ai-bubble__label">Booky Editing Services AI</div>}
       <div className="ai-bubble__text">{msg.content}</div>
     </div>
   );
@@ -151,7 +151,7 @@ const AdminAI = () => {
       <div className="ai-page">
         <div className="ai-page__header">
           <div>
-            <h1>Booky AI</h1>
+            <h1>Booky Editing Services AI</h1>
             <p className="ai-page__subtitle">Your financial, content &amp; analytics assistant</p>
           </div>
           {!isEmpty && (

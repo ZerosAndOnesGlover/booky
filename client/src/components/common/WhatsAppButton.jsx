@@ -14,7 +14,7 @@ const WhatsAppButton = () => {
   if (!whatsappNumber) return null;
 
   const cleanNumber = whatsappNumber.replace(/\D/g, '');
-  const message = encodeURIComponent("Hello! I'm interested in Booky's editing services.");
+  const message = encodeURIComponent("Hello! I'm interested in Booky Editing Services.");
   const href = 'https://wa.me/' + cleanNumber + '?text=' + message;
 
   return (

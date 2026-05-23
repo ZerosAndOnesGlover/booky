@@ -67,7 +67,7 @@ const Home = () => {
         <div className="container about-preview">
           <div className="about-preview__image">
             {settings?.founder_photo_url
-              ? <img src={settings.founder_photo_url} alt="Booky Founder" />
+              ? <img src={settings.founder_photo_url} alt="Booky Editing Services Founder" />
               : <div className="about-preview__placeholder"></div>
             }
           </div>

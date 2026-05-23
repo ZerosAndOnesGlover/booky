@@ -101,7 +101,7 @@ const Login = () => {
   return (
     <div className="admin-auth">
       <div className="admin-auth__box">
-        <h1>Booky Admin</h1>
+        <h1>Booky Editing Services Admin</h1>
         <p>Sign in to manage your website</p>
 
         {serverError && <div className="admin-auth__error">{serverError}</div>}

@@ -39,7 +39,7 @@ const About = () => {
         <div className="container about-founder">
           <div className="about-founder__image">
             {settings?.founder_photo_url ? (
-              <img src={settings.founder_photo_url} alt="Booky Founder" />
+              <img src={settings.founder_photo_url} alt="Booky Editing Services Founder" />
             ) : (
               <div className="about-founder__placeholder"></div>
             )}
