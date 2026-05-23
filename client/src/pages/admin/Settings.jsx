@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getAdminSettingsApi, updateSettingsApi, uploadLogoApi, removeLogoApi, uploadPhotoApi, removePhotoApi, changePasswordApi } from '../../services/api';
+import { getAdminSettingsApi, updateSettingsApi, uploadLogoApi, removeLogoApi, uploadPhotoApi, removePhotoApi, uploadHeroImageApi, removeHeroImageApi, changePasswordApi } from '../../services/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 
 const Settings = () => {
@@ -12,6 +12,8 @@ const Settings = () => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [photoFile, setPhotoFile] = useState(null);
+  const [heroPreview, setHeroPreview] = useState(null);
+  const [heroFile, setHeroFile] = useState(null);
   const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false });
   const [passwordError, setPasswordError] = useState('');
@@ -21,6 +23,7 @@ const Settings = () => {
       setSettings(res.data.settings);
       setLogoPreview(res.data.settings.logo_url);
       setPhotoPreview(res.data.settings.founder_photo_url);
+      setHeroPreview(res.data.settings.hero_image_url);
     }).catch(() => {});
   }, [token]);
 
@@ -88,6 +91,31 @@ const Settings = () => {
       setPhotoFile(null);
       showToast('Photo removed.');
     } catch { showToast('Failed to remove photo.'); }
+    setSaving('');
+  };
+
+  const handleHeroUpload = async () => {
+    if (!heroFile) return;
+    setSaving('hero');
+    const formData = new FormData();
+    formData.append('hero', heroFile);
+    try {
+      const res = await uploadHeroImageApi(token, formData);
+      setHeroPreview(res.data.hero_image_url);
+      setHeroFile(null);
+      showToast('Hero image updated successfully!');
+    } catch { showToast('Hero image upload failed.'); }
+    setSaving('');
+  };
+
+  const handleHeroRemove = async () => {
+    setSaving('hero-remove');
+    try {
+      await removeHeroImageApi(token);
+      setHeroPreview(null);
+      setHeroFile(null);
+      showToast('Hero image removed. Fallback image will be used.');
+    } catch { showToast('Failed to remove hero image.'); }
     setSaving('');
   };
 
@@ -160,6 +188,26 @@ const Settings = () => {
           <input className="settings-file-input" type="file" accept="image/*" onChange={(e) => { setPhotoFile(e.target.files[0]); setPhotoPreview(URL.createObjectURL(e.target.files[0])); }} />
           <button className="btn btn-primary settings-save-btn" onClick={handlePhotoUpload} disabled={saving === 'photo' || !photoFile}>
             {saving === 'photo' ? 'Uploading...' : 'Save Photo'}
+          </button>
+        </div>
+
+        {/* Hero Background Image */}
+        <div className="admin-form">
+          <h3 className="settings-section-title">Homepage Hero Background</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-grey)', marginBottom: '12px' }}>
+            Upload a landscape image to replace the default hero background. If removed, the default image will be used automatically.
+          </p>
+          {heroPreview && (
+            <div className="settings-preview-row">
+              <img src={heroPreview} alt="Hero background" className="settings-logo-preview" style={{ width: '100%', maxWidth: '320px', height: '100px', objectFit: 'cover', borderRadius: '8px' }} />
+              <button className="btn btn-outline btn-danger" onClick={handleHeroRemove} disabled={saving === 'hero-remove'}>
+                {saving === 'hero-remove' ? 'Removing...' : 'Remove'}
+              </button>
+            </div>
+          )}
+          <input className="settings-file-input" type="file" accept="image/*" onChange={(e) => { setHeroFile(e.target.files[0]); setHeroPreview(URL.createObjectURL(e.target.files[0])); }} />
+          <button className="btn btn-primary settings-save-btn" onClick={handleHeroUpload} disabled={saving === 'hero' || !heroFile}>
+            {saving === 'hero' ? 'Uploading...' : 'Save Hero Image'}
           </button>
         </div>
 

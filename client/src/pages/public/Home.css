@@ -3,9 +3,6 @@
   display: flex;
   align-items: center;
   background-color: var(--color-bg);
-  background-image:
-    linear-gradient(to right, rgba(230, 221, 240, 0.85) 30%, rgba(230, 221, 240, 0.5) 60%, rgba(230, 221, 240, 0.2) 100%),
-    url('/hero-bg.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

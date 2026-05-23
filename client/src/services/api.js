@@ -87,6 +87,12 @@ export const uploadPhotoApi = (token, data) => api.post('/api/admin/settings/pho
 export const removePhotoApi = (token) => api.delete('/api/admin/settings/photo', {
   headers: { Authorization: `Bearer ${token}` },
 });
+export const uploadHeroImageApi = (token, data) => api.post('/api/admin/settings/hero', data, {
+  headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+});
+export const removeHeroImageApi = (token) => api.delete('/api/admin/settings/hero', {
+  headers: { Authorization: `Bearer ${token}` },
+});
 
 // --- Admin: About ---
 export const getAdminAboutApi = (token) => api.get('/api/public/about', {

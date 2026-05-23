@@ -41,9 +41,14 @@ const Home = () => {
     ? 'https://wa.me/' + settings.whatsapp_number.replace(/\D/g, '') + '?text=' + encodeURIComponent("Hello! I'd like to book a consultation with Booky Editing Services.")
     : '#';
 
+  const heroBg = settings?.hero_image_url || '/hero-bg.jpg';
+
   return (
     <div className="home">
-      <section className="hero">
+      <section
+        className="hero"
+        style={{ backgroundImage: `linear-gradient(to right, rgba(230, 221, 240, 0.85) 30%, rgba(230, 221, 240, 0.5) 60%, rgba(230, 221, 240, 0.2) 100%), url('${heroBg}')` }}
+      >
         <div className="container hero__inner">
           <div className="hero__content">
             <h1>Helping Authors Create Timeless Books</h1>

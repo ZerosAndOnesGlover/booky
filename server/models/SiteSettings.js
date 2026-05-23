@@ -23,6 +23,14 @@ const SiteSettings = sequelize.define('SiteSettings', {
     type: DataTypes.STRING(500),
     allowNull: true,
   },
+  hero_image_url: {
+    type: DataTypes.STRING(1000),
+    allowNull: true,
+  },
+  hero_image_public_id: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+  },
   whatsapp_number: {
     type: DataTypes.STRING(50),
     allowNull: false,

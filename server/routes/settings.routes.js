@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getSettings, updateSettings, uploadLogo, uploadFounderPhoto, removeLogo, removeFounderPhoto } = require('../controllers/settings.controller');
+const { getSettings, updateSettings, uploadLogo, uploadFounderPhoto, removeLogo, removeFounderPhoto, uploadHeroImage, removeHeroImage } = require('../controllers/settings.controller');
 const authMiddleware = require('../middleware/auth');
 const { upload } = require('../middleware/upload');
 
@@ -13,5 +13,7 @@ router.post('/admin/settings/logo', authMiddleware, upload.single('logo'), uploa
 router.delete('/admin/settings/logo', authMiddleware, removeLogo);
 router.post('/admin/settings/photo', authMiddleware, upload.single('photo'), uploadFounderPhoto);
 router.delete('/admin/settings/photo', authMiddleware, removeFounderPhoto);
+router.post('/admin/settings/hero', authMiddleware, upload.single('hero'), uploadHeroImage);
+router.delete('/admin/settings/hero', authMiddleware, removeHeroImage);
 
 module.exports = router;

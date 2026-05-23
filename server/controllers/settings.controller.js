@@ -134,4 +134,51 @@ const removeFounderPhoto = async (req, res, next) => {
   }
 };
 
-module.exports = { getSettings, updateSettings, uploadLogo, uploadFounderPhoto, removeLogo, removeFounderPhoto };
+// --- ADMIN: Upload hero image ---
+const uploadHeroImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: true, message: 'No file uploaded.' });
+    }
+
+    const [settings] = await SiteSettings.findOrCreate({
+      where: { id: 1 },
+      defaults: { whatsapp_number: '', contact_email: '' },
+    });
+
+    await deleteFromCloudinary(settings.hero_image_public_id);
+
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: 'booky/brand',
+      resource_type: 'image',
+    });
+
+    await settings.update({
+      hero_image_url: result.secure_url,
+      hero_image_public_id: result.public_id,
+    });
+
+    return res.status(200).json({ message: 'Hero image uploaded successfully', hero_image_url: result.secure_url });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// --- ADMIN: Remove hero image ---
+const removeHeroImage = async (req, res, next) => {
+  try {
+    const [settings] = await SiteSettings.findOrCreate({
+      where: { id: 1 },
+      defaults: { whatsapp_number: '', contact_email: '' },
+    });
+
+    await deleteFromCloudinary(settings.hero_image_public_id);
+    await settings.update({ hero_image_url: null, hero_image_public_id: null });
+
+    return res.status(200).json({ message: 'Hero image removed successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getSettings, updateSettings, uploadLogo, uploadFounderPhoto, removeLogo, removeFounderPhoto, uploadHeroImage, removeHeroImage };
