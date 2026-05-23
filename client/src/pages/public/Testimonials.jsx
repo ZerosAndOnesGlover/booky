@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getTestimonialsApi, submitPublicTestimonialApi } from '../../services/api';
+import { setSEO } from '../../utils/seo';
 import './Testimonials.css';
 
 const StarPicker = ({ value, onChange }) => (
@@ -28,7 +29,12 @@ const Testimonials = () => {
   const [reviewError, setReviewError] = useState('');
 
   useEffect(() => {
-    document.title = 'Testimonials — Booky Editing Services';
+    setSEO({
+      title: 'Client Testimonials',
+      subtitle: 'What Authors Say About Us',
+      description: 'Read reviews and testimonials from authors who have worked with Booky Editing Services. See how we have helped writers transform their manuscripts into polished, publish-ready books.',
+      keywords: 'book editing reviews, author testimonials, manuscript editing feedback, Booky Editing reviews, client stories, book editor reviews Nigeria',
+    });
     getTestimonialsApi()
       .then((res) => setTestimonials(res.data.testimonials))
       .catch(() => {})

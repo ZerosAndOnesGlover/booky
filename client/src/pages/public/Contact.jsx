@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { submitQuoteApi } from '../../services/api';
+import { setSEO } from '../../utils/seo';
 import './Contact.css';
 
 const EDITING_TYPES = [
@@ -20,7 +21,12 @@ const Contact = () => {
   const preselectedService = searchParams.get('service') || '';
 
   useEffect(() => {
-    document.title = 'Get a Quote — Booky Editing Services';
+    setSEO({
+      title: 'Get a Quote',
+      subtitle: 'Book an Editorial Consultation',
+      description: 'Ready to refine your manuscript? Get a personalised editing quote or book a consultation with Booky Editing Services today. We serve authors locally in Lagos and internationally.',
+      keywords: 'get editing quote, book manuscript consultation, contact editor Lagos, hire proofreader Nigeria, manuscript editing inquiry, book editor quote',
+    });
   }, []);
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({
     defaultValues: { editing_type: EDITING_TYPES.includes(preselectedService) ? preselectedService : '' },

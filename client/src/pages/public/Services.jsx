@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { setSEO } from '../../utils/seo';
 import './Services.css';
 
 const SERVICES = [
@@ -37,7 +38,12 @@ const SERVICES = [
 
 const Services = () => {
   useEffect(() => {
-    document.title = 'Our Services — Booky Editing Services';
+    setSEO({
+      title: 'Editorial Services',
+      subtitle: 'Manuscript Editing & Publishing Support',
+      description: 'Explore our full range of editorial services — manuscript consultation, developmental editing, copyediting, proofreading, and publishing support tailored for every author.',
+      keywords: 'manuscript consultation, developmental editing, copyediting, proofreading, book formatting, publishing support, editorial services Nigeria, book editor Lagos',
+    });
   }, []);
 
   return (

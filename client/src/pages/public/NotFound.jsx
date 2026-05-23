@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { setSEO } from '../../utils/seo';
 import './NotFound.css';
 
 const NotFound = () => {
   useEffect(() => {
-    document.title = '404 Not Found — Booky Editing Services';
+    setSEO({
+      title: 'Page Not Found',
+      description: 'The page you are looking for does not exist or has been moved. Return to Booky Editing Services to explore our editorial and publishing support.',
+    });
   }, []);
 
   return (

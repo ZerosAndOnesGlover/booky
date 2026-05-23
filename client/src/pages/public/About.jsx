@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAboutApi, getSettingsApi } from '../../services/api';
+import { setSEO } from '../../utils/seo';
 import './About.css';
 
 const About = () => {
@@ -8,7 +9,12 @@ const About = () => {
   const [settings, setSettings] = useState(null);
 
   useEffect(() => {
-    document.title = 'About Us — Booky Editing Services';
+    setSEO({
+      title: 'About Us',
+      subtitle: 'Our Story & Passion for Authors',
+      description: 'Learn about Booky Editing Services — a Lagos-based editorial brand dedicated to helping authors bring their stories to life with precision, passion, and personalised care.',
+      keywords: 'about Booky Editing Services, Lagos book editor, editorial brand Nigeria, manuscript editor story, professional editing team, book editor Africa',
+    });
     getAboutApi().then((res) => setAbout(res.data.about)).catch(() => {});
     getSettingsApi().then((res) => setSettings(res.data.settings)).catch(() => {});
   }, []);

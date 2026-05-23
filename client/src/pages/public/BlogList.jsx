@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPublishedPostsApi } from '../../services/api';
+import { setSEO } from '../../utils/seo';
 import './BlogList.css';
 
 const BlogList = () => {
@@ -10,7 +11,12 @@ const BlogList = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    document.title = 'Blog — Booky Editing Services';
+    setSEO({
+      title: 'Editorial Blog',
+      subtitle: 'Writing & Publishing Tips for Authors',
+      description: 'Read expert insights, writing tips, and publishing guidance from Booky Editing Services. Resources and advice for authors at every stage of their writing and publishing journey.',
+      keywords: 'author blog, writing tips, publishing advice, manuscript tips, editorial blog, book writing guide, author resources Nigeria, self-publishing tips',
+    });
   }, []);
 
   useEffect(() => {

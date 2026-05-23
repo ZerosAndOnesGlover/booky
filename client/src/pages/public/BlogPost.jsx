@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { setSEO } from '../../utils/seo';
 import {
   getPostBySlugApi,
   getPublishedPostsApi,
@@ -39,7 +40,16 @@ const BlogPost = () => {
         setPost(res.data.post);
         setLikeCount(res.data.post.like_count ?? 0);
         setLiked(res.data.is_liked ?? false);
-        document.title = `${res.data.post.title} — Booky Editing Services`;
+        const post = res.data.post;
+        const excerpt = post.body
+          ? post.body.replace(/<[^>]+>/g, '').slice(0, 155).trim() + '…'
+          : `Read this article on the Booky Editing Services blog.`;
+        setSEO({
+          title: post.title,
+          subtitle: 'Editorial Blog',
+          description: excerpt,
+          keywords: `${post.category ? post.category + ', ' : ''}book editing blog, author tips, editorial blog, writing advice, Booky Editing Services`,
+        });
       })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
