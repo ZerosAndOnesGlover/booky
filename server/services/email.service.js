@@ -1,24 +1,14 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: false,
-    family: 4,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-};
+const getResend = () => new Resend(process.env.RESEND_API_KEY);
+const FROM = `Booky Admin <noreply@bookyeditingservices.com>`;
 
 // --- PASSWORD RESET EMAIL ---
 const sendPasswordResetEmail = async (toEmail, resetUrl) => {
-  const transporter = createTransporter();
+  const resend = getResend();
 
-  const mailOptions = {
-    from: `"Booky Admin" <${process.env.EMAIL_USER}>`,
+  await resend.emails.send({
+    from: FROM,
     to: toEmail,
     subject: 'Booky Admin — Password Reset Request',
     html: `
@@ -40,17 +30,15 @@ const sendPasswordResetEmail = async (toEmail, resetUrl) => {
         <p style="color: #888; font-size: 12px;">Booky Editing Services &mdash; Admin Panel</p>
       </div>
     `,
-  };
-
-  await transporter.sendMail(mailOptions);
+  });
 };
 
 // --- QUOTE FORM NOTIFICATION EMAIL ---
 const sendQuoteNotificationEmail = async (submission) => {
-  const transporter = createTransporter();
+  const resend = getResend();
 
-  const mailOptions = {
-    from: `"Booky Website" <${process.env.EMAIL_USER}>`,
+  await resend.emails.send({
+    from: `Booky Website <noreply@bookyeditingservices.com>`,
     to: process.env.NOTIFICATION_EMAIL,
     subject: `New Quote Request — ${submission.full_name}`,
     html: `
@@ -72,9 +60,7 @@ const sendQuoteNotificationEmail = async (submission) => {
         <p style="color: #888; font-size: 12px;">Booky Editing Services &mdash; Automated Notification</p>
       </div>
     `,
-  };
-
-  await transporter.sendMail(mailOptions);
+  });
 };
 
 // --- WHATSAPP NOTIFICATION via CallMeBot ---
@@ -110,10 +96,10 @@ const sendWhatsAppNotification = async (whatsappNumber, submission) => {
 
 // --- OTP / 2FA EMAIL ---
 const sendOtpEmail = async (otp) => {
-  const transporter = createTransporter();
+  const resend = getResend();
 
-  const mailOptions = {
-    from: `"Booky Admin" <${process.env.EMAIL_USER}>`,
+  await resend.emails.send({
+    from: FROM,
     to: process.env.NOTIFICATION_EMAIL,
     subject: 'Booky Admin — Login Verification Code',
     html: `
@@ -128,9 +114,7 @@ const sendOtpEmail = async (otp) => {
         <p style="color: #888; font-size: 12px;">Booky Editing Services &mdash; Admin Panel</p>
       </div>
     `,
-  };
-
-  await transporter.sendMail(mailOptions);
+  });
 };
 
 module.exports = { sendPasswordResetEmail, sendQuoteNotificationEmail, sendWhatsAppNotification, sendOtpEmail };
