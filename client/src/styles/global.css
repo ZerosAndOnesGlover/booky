@@ -58,28 +58,28 @@
 }
 
 [data-theme="dark"] .form-group label {
-  color: #4B2E63;
+  color: var(--color-text);
 }
 
 [data-theme="dark"] .btn-primary {
   background-color: var(--color-primary);
-  color: #1A1025;
+  color: #FFFFFF;
   border-color: var(--color-primary);
 }
 
 [data-theme="dark"] .btn-primary:hover {
   background-color: transparent;
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 
 [data-theme="dark"] .btn-outline {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
+  color: var(--color-text);
+  border-color: var(--color-border);
 }
 
 [data-theme="dark"] .btn-outline:hover {
   background-color: var(--color-primary);
-  color: #1A1025;
+  color: #FFFFFF;
 }
 
 [data-theme="dark"] .card {
