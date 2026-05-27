@@ -30,7 +30,16 @@ import Analytics from './pages/admin/Analytics';
 import Comments from './pages/admin/Comments';
 import AdminAI from './pages/admin/AdminAI';
 
+const PING_INTERVAL_MS = 14 * 60 * 1000; // 14 minutes — Render sleeps after 15
+
 const App = () => {
+  useEffect(() => {
+    const ping = () => fetch(`${import.meta.env.VITE_API_URL}/health`).catch(() => {});
+    ping();
+    const id = setInterval(ping, PING_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
+
   useEffect(() => {
     getSettingsApi().then((res) => {
       const url = res.data.settings.logo_url;
