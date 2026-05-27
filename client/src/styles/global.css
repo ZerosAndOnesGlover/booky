@@ -54,7 +54,7 @@
 [data-theme="dark"] h4,
 [data-theme="dark"] h5,
 [data-theme="dark"] h6 {
-  color: #4B2E63;
+  color: var(--color-text);
 }
 
 [data-theme="dark"] .form-group label {
