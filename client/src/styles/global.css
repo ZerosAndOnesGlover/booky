@@ -82,6 +82,17 @@
   color: #FFFFFF;
 }
 
+[data-theme="dark"] .btn-white {
+  background-color: #FFFFFF;
+  color: #4B2E63;
+  border-color: #FFFFFF;
+}
+
+[data-theme="dark"] .btn-white:hover {
+  background-color: transparent;
+  color: #FFFFFF;
+}
+
 [data-theme="dark"] .card {
   background-color: var(--color-neutral);
 }
