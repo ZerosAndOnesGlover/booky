@@ -106,6 +106,10 @@
   flex-shrink: 0;
 }
 
+[data-theme="dark"] .navbar__logo-text {
+  color: var(--color-text);
+}
+
 [data-theme="dark"] .theme-toggle__track {
   background-color: #5B3E7A;
 }
