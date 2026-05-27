@@ -110,6 +110,12 @@
   color: var(--color-text);
 }
 
+[data-theme="dark"] .navbar__cta.btn-primary {
+  background-color: #4B2E63;
+  color: #FFFFFF !important;
+  border-color: #4B2E63;
+}
+
 [data-theme="dark"] .theme-toggle__track {
   background-color: #5B3E7A;
 }
