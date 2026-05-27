@@ -172,6 +172,16 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar__logo img { height: 46px; }
+  .navbar__logo-text { font-size: 2rem; }
+}
+
+@media (min-width: 1025px) {
+  .navbar__logo img { height: 52px; }
+  .navbar__logo-text { font-size: 2.2rem; }
+}
+
 @media (max-width: 768px) {
   .navbar__hamburger {
     display: flex;

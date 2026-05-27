@@ -197,11 +197,20 @@
   color: var(--color-grey);
 }
 
+@media (max-width: 1024px) {
+  .hero { min-height: 75vh; }
+  .about-preview {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  .about-preview__image img,
+  .about-preview__placeholder { height: 400px; }
+}
+
 @media (max-width: 768px) {
   .hero { min-height: 70vh; }
   .hero__ctas { flex-direction: column; }
   .hero__ctas .btn { width: 100%; text-align: center; }
-  .about-preview { grid-template-columns: 1fr; }
   .about-preview__image img,
   .about-preview__placeholder { height: 300px; }
 }

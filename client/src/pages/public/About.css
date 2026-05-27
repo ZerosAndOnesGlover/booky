@@ -85,12 +85,25 @@
   font-size: 0.9rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .about-founder {
     grid-template-columns: 1fr;
   }
   .about-founder__image img,
   .about-founder__placeholder {
+    height: 400px;
+  }
+  .page-hero {
+    padding: var(--spacing-xl) 0 var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-founder__image img,
+  .about-founder__placeholder {
     height: 300px;
+  }
+  .page-hero {
+    padding: var(--spacing-lg) 0 var(--spacing-md);
   }
 }

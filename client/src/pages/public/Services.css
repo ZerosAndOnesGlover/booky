@@ -46,6 +46,16 @@
   margin-bottom: var(--spacing-lg);
 }
 
+@media (max-width: 1024px) {
+  .service-row {
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
+  }
+  .page-hero {
+    padding: var(--spacing-xl) 0 var(--spacing-lg);
+  }
+}
+
 @media (max-width: 768px) {
   .service-row,
   .service-row--reverse {
@@ -55,5 +65,8 @@
   .service-row--reverse .service-row__icon-block,
   .service-row--reverse .service-row__content {
     order: unset;
+  }
+  .page-hero {
+    padding: var(--spacing-lg) 0 var(--spacing-md);
   }
 }

@@ -129,10 +129,23 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+@media (max-width: 1024px) {
+  .footer__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+  }
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 768px) {
   .footer__inner {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
+  }
+  .footer__brand {
+    grid-column: auto;
   }
 }
 
