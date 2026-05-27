@@ -112,6 +112,14 @@
   color: var(--color-grey);
 }
 
+@media (max-width: 1024px) {
+  .page-hero { padding: var(--spacing-xl) 0 var(--spacing-lg); }
+}
+
+@media (max-width: 768px) {
+  .page-hero { padding: var(--spacing-lg) 0 var(--spacing-md); }
+}
+
 .blog-pagination {
   display: flex;
   align-items: center;

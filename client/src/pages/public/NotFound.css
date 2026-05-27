@@ -10,7 +10,7 @@
 }
 
 .notfound__inner h1 {
-  font-size: 8rem;
+  font-size: clamp(4rem, 15vw, 8rem);
   line-height: 1;
   color: var(--color-secondary);
   margin-bottom: 0;

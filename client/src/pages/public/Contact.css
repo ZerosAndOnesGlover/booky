@@ -48,7 +48,13 @@
   color: var(--color-grey);
 }
 
+@media (max-width: 1024px) {
+  .quote-form { padding: var(--spacing-lg); }
+  .page-hero { padding: var(--spacing-xl) 0 var(--spacing-lg); }
+}
+
 @media (max-width: 768px) {
   .form-grid { grid-template-columns: 1fr; }
   .quote-form { padding: var(--spacing-md); }
+  .page-hero { padding: var(--spacing-lg) 0 var(--spacing-md); }
 }
