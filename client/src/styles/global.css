@@ -54,7 +54,11 @@
 [data-theme="dark"] h4,
 [data-theme="dark"] h5,
 [data-theme="dark"] h6 {
-  color: var(--color-primary);
+  color: #4B2E63;
+}
+
+[data-theme="dark"] .form-group label {
+  color: #4B2E63;
 }
 
 [data-theme="dark"] .btn-primary {
