@@ -25,6 +25,16 @@ const Book = sequelize.define('Book', {
     type: DataTypes.STRING(500),
     allowNull: true,
   },
+  genre: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    set(value) { this.setDataValue('genre', value ? value.trim() : value); },
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    set(value) { this.setDataValue('description', value ? value.trim() : value); },
+  },
   links: {
     type: DataTypes.JSONB,
     defaultValue: [],

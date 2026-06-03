@@ -4,7 +4,7 @@ import { getAllBooksApi, createBookApi, updateBookApi, deleteBookApi } from '../
 import AdminLayout from '../../components/admin/AdminLayout';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
 
-const EMPTY_FORM = { title: '', author: '', links: [], is_active: true };
+const EMPTY_FORM = { title: '', author: '', genre: '', description: '', links: [], is_active: true };
 
 const BooksManager = () => {
   const { token } = useAuth();
@@ -57,6 +57,8 @@ const BooksManager = () => {
       const fd = new FormData();
       fd.append('title', form.title.trim());
       fd.append('author', form.author.trim());
+      fd.append('genre', form.genre.trim());
+      fd.append('description', form.description.trim());
       fd.append('links', JSON.stringify(form.links));
       fd.append('is_active', form.is_active);
       if (coverFile) fd.append('cover_image', coverFile);
@@ -87,7 +89,7 @@ const BooksManager = () => {
 
   const handleEdit = (book) => {
     setEditId(book.id);
-    setForm({ title: book.title, author: book.author, links: book.links || [], is_active: book.is_active });
+    setForm({ title: book.title, author: book.author, genre: book.genre || '', description: book.description || '', links: book.links || [], is_active: book.is_active });
     setCoverFile(null);
     setCoverPreview(book.cover_image_url || null);
     setLinkDraft({ name: '', url: '' });
@@ -213,6 +215,26 @@ const BooksManager = () => {
                 value={form.author}
                 onChange={(e) => setForm((f) => ({ ...f, author: e.target.value }))}
                 required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Genre / Category</label>
+              <input
+                type="text"
+                placeholder="e.g. Fiction, Non-fiction, Children's"
+                value={form.genre}
+                onChange={(e) => setForm((f) => ({ ...f, genre: e.target.value }))}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Description</label>
+              <textarea
+                rows={3}
+                placeholder="A brief description of the book or the editing work done..."
+                value={form.description}
+                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
               />
             </div>
 

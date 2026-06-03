@@ -29,7 +29,7 @@ const getAllBooks = async (req, res, next) => {
 // --- ADMIN: Create book ---
 const createBook = async (req, res, next) => {
   try {
-    const { title, author, links } = req.body;
+    const { title, author, genre, description, links } = req.body;
     if (!title || !author) {
       return res.status(400).json({ error: true, message: 'Title and author are required.' });
     }
@@ -55,6 +55,8 @@ const createBook = async (req, res, next) => {
     const book = await Book.create({
       title,
       author,
+      genre: genre || null,
+      description: description || null,
       cover_image_url,
       cover_image_public_id,
       links: parsedLinks,
@@ -75,7 +77,7 @@ const updateBook = async (req, res, next) => {
       return res.status(404).json({ error: true, message: 'Book not found.' });
     }
 
-    const { title, author, links, display_order, is_active } = req.body;
+    const { title, author, genre, description, links, display_order, is_active } = req.body;
 
     let parsedLinks = book.links;
     if (links !== undefined) {
@@ -98,6 +100,8 @@ const updateBook = async (req, res, next) => {
     await book.update({
       title: title ?? book.title,
       author: author ?? book.author,
+      genre: genre !== undefined ? (genre || null) : book.genre,
+      description: description !== undefined ? (description || null) : book.description,
       cover_image_url,
       cover_image_public_id,
       links: parsedLinks,

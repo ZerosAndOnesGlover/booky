@@ -13,6 +13,7 @@ import Testimonials from './pages/public/Testimonials';
 import Contact from './pages/public/Contact';
 import BlogList from './pages/public/BlogList';
 import BlogPost from './pages/public/BlogPost';
+import Books from './pages/public/Books';
 import NotFound from './pages/public/NotFound';
 
 // Admin Pages
@@ -61,6 +62,7 @@ const App = () => {
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/about" element={<Layout><About /></Layout>} />
       <Route path="/services" element={<Layout><Services /></Layout>} />
+      <Route path="/books" element={<Layout><Books /></Layout>} />
       <Route path="/testimonials" element={<Layout><Testimonials /></Layout>} />
       <Route path="/contact" element={<Layout><Contact /></Layout>} />
       <Route path="/blog" element={<Layout><BlogList /></Layout>} />
