@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getSettingsApi } from '../../services/api';
 import { setSEO } from '../../utils/seo';
 import './Services.css';
 
@@ -37,6 +38,12 @@ const SERVICES = [
 ];
 
 const Services = () => {
+  const [inquiryFormUrl, setInquiryFormUrl] = useState(null);
+
+  useEffect(() => {
+    getSettingsApi().then((res) => setInquiryFormUrl(res.data.settings.manuscript_inquiry_form_url || null)).catch(() => {});
+  }, []);
+
   useEffect(() => {
     setSEO({
       title: 'Editorial Services',
@@ -71,6 +78,33 @@ const Services = () => {
           ))}
         </div>
       </section>
+
+      {inquiryFormUrl && (
+        <section className="section inquiry-form-section">
+          <div className="container">
+            <div className="inquiry-form-header">
+              <h2>Start Here: Manuscript Inquiry</h2>
+              <p>Still not sure which service fits your manuscript? Fill out this short form and we'll recommend the right path for you.</p>
+            </div>
+            <div className="inquiry-form-embed">
+              <iframe
+                src={inquiryFormUrl}
+                title="Manuscript Inquiry Form"
+                frameBorder="0"
+                marginHeight="0"
+                marginWidth="0"
+              >
+                Loading form&hellip;
+              </iframe>
+            </div>
+            <div className="inquiry-form-fallback">
+              <a href={inquiryFormUrl} target="_blank" rel="noopener noreferrer">
+                Open form in a new tab &rarr;
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="cta-banner">
         <div className="container cta-banner__inner">

@@ -18,7 +18,7 @@ const getSettings = async (req, res, next) => {
 // --- ADMIN: Update contact details and social links ---
 const updateSettings = async (req, res, next) => {
   try {
-    const { whatsapp_number, contact_email, instagram_url, twitter_url, facebook_url, linkedin_url } = req.body;
+    const { whatsapp_number, contact_email, instagram_url, twitter_url, facebook_url, linkedin_url, manuscript_inquiry_form_url } = req.body;
 
     const [settings] = await SiteSettings.findOrCreate({
       where: { id: 1 },
@@ -32,6 +32,7 @@ const updateSettings = async (req, res, next) => {
       twitter_url: twitter_url || settings.twitter_url,
       facebook_url: facebook_url || settings.facebook_url,
       linkedin_url: linkedin_url || settings.linkedin_url,
+      manuscript_inquiry_form_url: manuscript_inquiry_form_url !== undefined ? (manuscript_inquiry_form_url || null) : settings.manuscript_inquiry_form_url,
     });
 
     return res.status(200).json({ message: 'Settings updated successfully', settings });

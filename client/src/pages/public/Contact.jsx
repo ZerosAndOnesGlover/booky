@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { submitQuoteApi } from '../../services/api';
+import { submitQuoteApi, getSettingsApi } from '../../services/api';
 import { setSEO } from '../../utils/seo';
 import './Contact.css';
 
@@ -17,8 +17,13 @@ const EDITING_TYPES = [
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [inquiryFormUrl, setInquiryFormUrl] = useState(null);
   const [searchParams] = useSearchParams();
   const preselectedService = searchParams.get('service') || '';
+
+  useEffect(() => {
+    getSettingsApi().then((res) => setInquiryFormUrl(res.data.settings.manuscript_inquiry_form_url || null)).catch(() => {});
+  }, []);
 
   useEffect(() => {
     setSEO({
@@ -66,6 +71,15 @@ const Contact = () => {
 
       <section className="section">
         <div className="container contact-inner">
+          {inquiryFormUrl && (
+            <div className="inquiry-form-banner">
+              <span className="inquiry-form-banner__icon">?</span>
+              <div>
+                <strong>Not sure which service you need?</strong>
+                <p>We recommend completing our <a href={inquiryFormUrl} target="_blank" rel="noopener noreferrer">Manuscript Inquiry Form</a> first — it helps us understand your manuscript and recommend the right service before you submit a quote request.</p>
+              </div>
+            </div>
+          )}
           {submitted ? (
             <div className="contact-success">
               <span>✅</span>

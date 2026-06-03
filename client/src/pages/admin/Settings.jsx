@@ -8,6 +8,7 @@ const Settings = () => {
   const [settings, setSettings] = useState({});
   const [toast, setToast] = useState('');
   const [saving, setSaving] = useState('');
+  const [inquiryFormSaved, setInquiryFormSaved] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
@@ -119,6 +120,17 @@ const Settings = () => {
     setSaving('');
   };
 
+  const handleInquiryFormSave = async (e) => {
+    e.preventDefault();
+    setSaving('inquiry');
+    try {
+      await updateSettingsApi(token, { manuscript_inquiry_form_url: settings.manuscript_inquiry_form_url ?? '' });
+      showToast('Inquiry form URL saved!');
+      setInquiryFormSaved(true);
+    } catch { showToast('Save failed.'); }
+    setSaving('');
+  };
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
     setPasswordError('');
@@ -209,6 +221,30 @@ const Settings = () => {
           <button className="btn btn-primary settings-save-btn" onClick={handleHeroUpload} disabled={saving === 'hero' || !heroFile}>
             {saving === 'hero' ? 'Uploading...' : 'Save Hero Image'}
           </button>
+        </div>
+
+        {/* Manuscript Inquiry Form */}
+        <div className="admin-form">
+          <h3 className="settings-section-title">Manuscript Inquiry Form</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-grey)', marginBottom: '12px' }}>
+            Paste the embed URL from Google Forms (open the form &rarr; Send &rarr; Embed tab &rarr; copy the <code>src</code> URL).
+            When set, the form will be embedded on the Services page and linked from the Contact page.
+            Clear the field and save to remove it from the site.
+          </p>
+          <form onSubmit={handleInquiryFormSave}>
+            <div className="form-group">
+              <label>Embed URL</label>
+              <input
+                type="url"
+                placeholder="https://docs.google.com/forms/d/e/.../viewform?embedded=true"
+                value={settings.manuscript_inquiry_form_url || ''}
+                onChange={(e) => { setSettings(s => ({ ...s, manuscript_inquiry_form_url: e.target.value })); setInquiryFormSaved(false); }}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary settings-save-btn" disabled={saving === 'inquiry'}>
+              {saving === 'inquiry' ? 'Saving...' : inquiryFormSaved ? 'Saved' : 'Save Form URL'}
+            </button>
+          </form>
         </div>
 
         {/* Contact & Social */}
