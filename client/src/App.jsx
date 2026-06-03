@@ -29,6 +29,7 @@ import ResetPassword from './pages/admin/ResetPassword';
 import Analytics from './pages/admin/Analytics';
 import Comments from './pages/admin/Comments';
 import AdminAI from './pages/admin/AdminAI';
+import BooksManager from './pages/admin/BooksManager';
 
 const PING_INTERVAL_MS = 14 * 60 * 1000; // 14 minutes — Render sleeps after 15
 
@@ -80,6 +81,7 @@ const App = () => {
       <Route path="/admin/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
       <Route path="/admin/comments" element={<ProtectedRoute><Comments /></ProtectedRoute>} />
       <Route path="/admin/ai" element={<ProtectedRoute><AdminAI /></ProtectedRoute>} />
+      <Route path="/admin/books" element={<ProtectedRoute><BooksManager /></ProtectedRoute>} />
 
       {/* 404 */}
       <Route path="*" element={<Layout><NotFound /></Layout>} />

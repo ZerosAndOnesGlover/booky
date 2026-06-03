@@ -16,6 +16,7 @@ const quoteRoutes = require('./routes/quote.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const commentRoutes = require('./routes/comment.routes');
 const aiRoutes = require('./routes/ai.routes');
+const bookRoutes = require('./routes/book.routes');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -63,6 +64,7 @@ app.use('/api', quoteRoutes);
 app.use('/api', analyticsRoutes);
 app.use('/api', commentRoutes);
 app.use('/api', aiRoutes);
+app.use('/api', bookRoutes);
 
 // --- 404 Handler ---
 app.use((req, res) => {

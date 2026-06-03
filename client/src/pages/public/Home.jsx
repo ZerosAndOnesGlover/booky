@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getSettingsApi, getTestimonialsApi, getAboutApi } from '../../services/api';
+import { getSettingsApi, getTestimonialsApi, getAboutApi, getBooksApi } from '../../services/api';
 import { setSEO } from '../../utils/seo';
 import './Home.css';
 
@@ -24,6 +24,7 @@ const Home = () => {
   const [settings, setSettings] = useState(null);
   const [testimonials, setTestimonials] = useState([]);
   const [about, setAbout] = useState(null);
+  const [books, setBooks] = useState([]);
 
   useEffect(() => {
     setSEO({
@@ -35,6 +36,7 @@ const Home = () => {
     getSettingsApi().then((res) => setSettings(res.data.settings)).catch(() => {});
     getTestimonialsApi().then((res) => setTestimonials(res.data.testimonials)).catch(() => {});
     getAboutApi().then((res) => setAbout(res.data.about)).catch(() => {});
+    getBooksApi().then((res) => setBooks(res.data.books)).catch(() => {});
   }, []);
 
   const whatsappHref = settings?.whatsapp_number
@@ -121,6 +123,45 @@ const Home = () => {
                   <div className="testimonial-card__author">
                     <strong>{t.client_name}</strong>
                     {t.book_title && <span>{t.book_title}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {books.length > 0 && (
+        <section className="section section-alt">
+          <div className="container">
+            <h2 className="text-center" style={{ marginBottom: '48px' }}>Books Worked On</h2>
+            <div className="books-grid">
+              {books.map((book) => (
+                <div key={book.id} className="book-card">
+                  <div className="book-card__cover">
+                    {book.cover_image_url
+                      ? <img src={book.cover_image_url} alt={book.title} />
+                      : <div className="book-card__cover-placeholder" />
+                    }
+                  </div>
+                  <div className="book-card__info">
+                    <h4 className="book-card__title">{book.title}</h4>
+                    <p className="book-card__author">{book.author}</p>
+                    {book.links && book.links.length > 0 && (
+                      <div className="book-card__links">
+                        {book.links.map((link, i) => (
+                          <a
+                            key={i}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="book-card__link"
+                          >
+                            {link.name}
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

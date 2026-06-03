@@ -150,6 +150,23 @@ export const deleteCommentApi = (token, id) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+// --- Public: Books ---
+export const getBooksApi = () => api.get('/api/public/books');
+
+// --- Admin: Books ---
+export const getAllBooksApi = (token) => api.get('/api/admin/books', {
+  headers: { Authorization: `Bearer ${token}` },
+});
+export const createBookApi = (token, data) => api.post('/api/admin/books', data, {
+  headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+});
+export const updateBookApi = (token, id, data) => api.put(`/api/admin/books/${id}`, data, {
+  headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+});
+export const deleteBookApi = (token, id) => api.delete(`/api/admin/books/${id}`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+
 // --- Admin: Quotes ---
 export const getQuotesApi = (token, status = '', page = 1) => api.get(`/api/admin/quotes?status=${status}&page=${page}`, {
   headers: { Authorization: `Bearer ${token}` },

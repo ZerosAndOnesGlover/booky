@@ -10,6 +10,7 @@ require('../models/QuoteSubmission');
 require('../models/PageView');
 require('../models/BlogLike');
 require('../models/BlogComment');
+require('../models/Book');
 
 const syncDb = async () => {
   try {

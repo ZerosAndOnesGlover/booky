@@ -61,6 +61,7 @@ const AdminLayout = ({ children }) => {
           <NavLink to="/admin" end>📊 Dashboard</NavLink>
           <NavLink to="/admin/blogs">✏️ Blog Posts</NavLink>
           <NavLink to="/admin/testimonials">💬 Testimonials</NavLink>
+          <NavLink to="/admin/books">📚 Books</NavLink>
           <NavLink to="/admin/quotes">
             📥 Quote Inbox
             {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
