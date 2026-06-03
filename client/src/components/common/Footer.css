@@ -140,12 +140,22 @@
 }
 
 @media (max-width: 768px) {
+  .footer {
+    padding-top: var(--spacing-lg);
+  }
   .footer__inner {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
   }
   .footer__brand {
     grid-column: auto;
+  }
+  .footer__bottom-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
   }
 }
 

@@ -368,6 +368,7 @@ p:last-child { margin-bottom: 0; }
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .section { padding: 56px 0; }
 }
 
 @media (max-width: 768px) {
