@@ -26,7 +26,7 @@
 
 .hero__content p {
   font-size: 1.15rem;
-  color: var(--color-grey);
+  color: var(--color-black);
   margin-bottom: var(--spacing-lg);
   line-height: 1.8;
 }
@@ -167,6 +167,10 @@
 
 [data-theme="dark"] .hero__content h1 {
   color: #4B2E63;
+}
+
+[data-theme="dark"] .hero__content p {
+  color: #2E2E2E;
 }
 
 [data-theme="dark"] .hero__ctas .btn-outline {
