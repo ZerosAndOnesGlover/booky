@@ -764,18 +764,20 @@
   border: 1px solid rgba(201,168,232,0.15);
 }
 
-/* --- Mobile Top Bar --- */
+/* --- Mobile Top Bar (hidden on desktop) --- */
 .admin-topbar {
   display: none;
 }
 
-/* --- Mobile Sidebar Backdrop --- */
+/* --- Mobile Sidebar Backdrop (hidden on desktop) --- */
 .admin-sidebar-backdrop {
   display: none;
 }
 
-/* --- Admin Mobile --- */
-@media (max-width: 768px) {
+/* ─────────────────────────────────────────────────────────────
+   Tablet & Mobile: sidebar off-canvas, topbar visible
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
   .admin-topbar {
     display: flex;
     align-items: center;
@@ -788,6 +790,7 @@
     background-color: var(--color-primary);
     padding: 0 var(--spacing-sm);
     z-index: 200;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
 
   [data-theme="dark"] .admin-topbar {
@@ -803,6 +806,7 @@
     background: none;
     border: none;
     cursor: pointer;
+    flex-shrink: 0;
   }
 
   .admin-topbar__hamburger span {
@@ -822,12 +826,16 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 1rem;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   [data-theme="dark"] .admin-topbar__brand {
     color: var(--color-text);
   }
 
+  /* Sidebar slides off-canvas */
   .admin-sidebar {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -846,9 +854,46 @@
     z-index: 99;
   }
 
+  /* No sidebar offset — topbar takes its place */
   .admin-main {
     margin-left: 0;
-    padding: calc(56px + var(--spacing-md)) var(--spacing-sm) var(--spacing-md);
+    padding: calc(56px + var(--spacing-md)) var(--spacing-md) var(--spacing-md);
+  }
+
+  /* Collapse two-column manager layouts */
+  .testimonials-grid,
+  .books-manager-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* BlogEdit: stack category/meta fields */
+  .blog-edit-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Analytics grid: single column */
+  .analytics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Filters wrap */
+  .admin-filters {
+    flex-wrap: wrap;
+  }
+
+  /* Analytics controls wrap */
+  .analytics-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile: tighter spacing and additional layout adjustments
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .admin-main {
+    padding: calc(56px + var(--spacing-sm)) var(--spacing-sm) var(--spacing-sm);
   }
 
   .admin-stats {
@@ -861,37 +906,13 @@
     gap: 12px;
   }
 
-  .admin-filters {
-    flex-wrap: wrap;
-  }
-
-  /* Testimonials manager: stack list + form vertically */
-  .testimonials-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* BlogEdit: stack category/meta fields */
-  .blog-edit-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Analytics: stack controls and grids */
-  .admin-page-header:has(.analytics-controls) {
-    align-items: flex-start;
-  }
-
   .analytics-stats {
     grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  .analytics-grid {
-    grid-template-columns: 1fr !important;
   }
 
   .analytics-controls {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
     width: 100%;
   }
 
@@ -906,6 +927,13 @@
   .analytics-date {
     flex: 1;
     min-width: 0;
+  }
+}
+
+/* Truncate brand name on small phones */
+@media (max-width: 400px) {
+  .admin-topbar__brand {
+    font-size: 0.85rem;
   }
 }
 

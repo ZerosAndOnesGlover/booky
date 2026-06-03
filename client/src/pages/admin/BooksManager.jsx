@@ -134,7 +134,7 @@ const BooksManager = () => {
 
       <div className="admin-page-header"><h1>Books Worked On</h1></div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'start' }}>
+      <div className="books-manager-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'start' }}>
         {/* Table */}
         <div className="admin-table-wrapper">
           {books.length === 0 ? (
