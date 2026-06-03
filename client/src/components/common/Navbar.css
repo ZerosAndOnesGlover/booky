@@ -183,7 +183,21 @@
   }
 }
 
-@media (max-width: 1024px) {
+/* Tablet: show full inline navbar, just compact it */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar__logo-text {
+    display: none;
+  }
+  .navbar__links {
+    gap: 18px;
+  }
+  .navbar__cta.btn {
+    padding: 12px 20px;
+  }
+}
+
+/* Mobile: hamburger menu */
+@media (max-width: 768px) {
   .navbar__hamburger {
     display: flex;
   }
