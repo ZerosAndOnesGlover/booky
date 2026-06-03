@@ -202,7 +202,7 @@
   z-index: 2000;
   padding: var(--spacing-md);
   animation: lightboxFadeIn 0.2s ease;
-  cursor: pointer;
+  cursor: default;
 }
 
 .book-lightbox__img {
