@@ -294,6 +294,25 @@
   border-color: #4B2E63;
 }
 
+[data-theme="dark"] .book-card {
+  background-color: var(--color-neutral);
+}
+
+[data-theme="dark"] .book-card__title {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .book-card__link {
+  color: rgba(201,168,232,0.9);
+  border-color: rgba(201,168,232,0.3);
+}
+
+[data-theme="dark"] .book-card__link:hover {
+  background-color: rgba(201,168,232,0.15);
+  color: rgba(201,168,232,0.95);
+  border-color: rgba(201,168,232,0.5);
+}
+
 [data-theme="dark"] .cta-banner {
   background-color: #251535;
 }
