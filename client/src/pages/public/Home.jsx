@@ -25,6 +25,7 @@ const Home = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [about, setAbout] = useState(null);
   const [books, setBooks] = useState([]);
+  const [lightboxBook, setLightboxBook] = useState(null);
 
   useEffect(() => {
     setSEO({
@@ -131,6 +132,18 @@ const Home = () => {
         </section>
       )}
 
+      {lightboxBook && (
+        <div className="book-lightbox" onClick={() => setLightboxBook(null)} role="dialog" aria-modal="true" aria-label={lightboxBook.title}>
+          <button className="book-lightbox__close" onClick={() => setLightboxBook(null)} aria-label="Close">✕</button>
+          <img
+            src={lightboxBook.cover_image_url}
+            alt={lightboxBook.title}
+            className="book-lightbox__img"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
       {books.length > 0 && (
         <section className="section section-alt">
           <div className="container">
@@ -140,7 +153,12 @@ const Home = () => {
                 <div key={book.id} className="book-card">
                   <div className="book-card__cover">
                     {book.cover_image_url
-                      ? <img src={book.cover_image_url} alt={book.title} />
+                      ? <img
+                          src={book.cover_image_url}
+                          alt={book.title}
+                          className="book-card__cover-img"
+                          onClick={() => setLightboxBook(book)}
+                        />
                       : <div className="book-card__cover-placeholder" />
                     }
                   </div>

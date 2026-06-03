@@ -181,6 +181,74 @@
   display: block;
 }
 
+.book-card__cover-img {
+  cursor: zoom-in;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.book-card__cover-img:hover {
+  transform: scale(1.03);
+  filter: brightness(0.92);
+}
+
+/* --- Book Cover Lightbox --- */
+.book-lightbox {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--spacing-md);
+  animation: lightboxFadeIn 0.2s ease;
+  cursor: pointer;
+}
+
+.book-lightbox__img {
+  max-height: 90vh;
+  max-width: min(480px, 90vw);
+  object-fit: contain;
+  border-radius: var(--border-radius);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  cursor: default;
+  animation: lightboxScaleIn 0.2s ease;
+}
+
+.book-lightbox__close {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  background: rgba(255,255,255,0.12);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  line-height: 1;
+  z-index: 2001;
+}
+
+.book-lightbox__close:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+@keyframes lightboxFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lightboxScaleIn {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
 .book-card__cover-placeholder {
   width: 100%;
   height: 100%;
