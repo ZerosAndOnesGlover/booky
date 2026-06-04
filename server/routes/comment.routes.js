@@ -25,7 +25,7 @@ router.get('/public/blogs/:slug/comments', getComments);
 router.post('/public/blogs/:slug/comments',
   commentLimiter,
   [
-    body('author_name').notEmpty().trim().withMessage('Name is required'),
+    body('author_name').notEmpty().trim().isLength({ max: 120 }).withMessage('Name is required (max 120 characters)'),
     body('body').notEmpty().trim().isLength({ max: 1000 }).withMessage('Comment must be between 1 and 1000 characters'),
   ],
   handleValidation,

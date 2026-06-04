@@ -8,14 +8,6 @@ const api = axios.create({
   },
 });
 
-// Attach JWT token to every request if it exists
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('booky_token_ref');
-  // We don't store the token in localStorage — this is just a flag
-  // The actual token is passed via AuthContext
-  return config;
-});
-
 // --- Auth ---
 export const loginApi = (data) => {
   const deviceId = localStorage.getItem('booky_device_id');

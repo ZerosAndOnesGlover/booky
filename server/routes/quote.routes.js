@@ -34,11 +34,11 @@ const EDITING_TYPES = [
 // --- PUBLIC ---
 router.post('/public/quote', quoteLimiter, upload.single('manuscript'),
   [
-    body('full_name').notEmpty().withMessage('Full name is required'),
-    body('email').isEmail().withMessage('Valid email is required'),
-    body('phone').notEmpty().withMessage('Phone number is required'),
-    body('book_title').notEmpty().withMessage('Book title is required'),
-    body('genre').notEmpty().withMessage('Genre is required'),
+    body('full_name').notEmpty().trim().isLength({ max: 255 }).withMessage('Full name is required (max 255 characters)'),
+    body('email').isEmail().isLength({ max: 255 }).withMessage('Valid email is required'),
+    body('phone').notEmpty().trim().isLength({ max: 100 }).withMessage('Phone number is required (max 100 characters)'),
+    body('book_title').notEmpty().trim().isLength({ max: 255 }).withMessage('Book title is required (max 255 characters)'),
+    body('genre').notEmpty().trim().isLength({ max: 100 }).withMessage('Genre is required (max 100 characters)'),
     body('word_count').isInt({ min: 1, max: 2000000 }).withMessage('Word count must be between 1 and 2,000,000'),
     body('editing_type').isIn(EDITING_TYPES).withMessage('Invalid editing type selected'),
     body('deadline').isDate().withMessage('Valid deadline date is required')

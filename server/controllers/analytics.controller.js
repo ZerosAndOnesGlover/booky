@@ -6,12 +6,10 @@ const { Op, fn, col, literal } = require('sequelize');
 let geoip;
 try { geoip = require('geoip-lite'); } catch {}
 
-// Extract real client IP (handles proxies)
-const getClientIp = (req) => {
-  const forwarded = req.headers['x-forwarded-for'];
-  if (forwarded) return forwarded.split(',')[0].trim();
-  return req.ip || req.connection?.remoteAddress || '';
-};
+// Express derives the real client IP from X-Forwarded-For per the configured
+// `trust proxy` setting. Trusting the raw header directly would let any client
+// spoof its geo, so rely on req.ip instead.
+const getClientIp = (req) => req.ip || req.socket?.remoteAddress || '';
 
 // --- PUBLIC: Record a page view ---
 const recordPageView = async (req, res, next) => {

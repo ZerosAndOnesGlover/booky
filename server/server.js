@@ -26,8 +26,10 @@ app.use(helmet());
 // Support comma-separated list e.g. "https://old.vercel.app,https://new.vercel.app"
 const allowedOrigins = [
   ...(process.env.FRONTEND_URL || '').split(',').map(u => u.trim()).filter(Boolean),
-  // Allow any private network IP on the same port (for local client previews)
-  /^http:\/\/(192\.168|10\.\d+|172\.(1[6-9]|2\d|3[01]))\.\d+\.\d+:5173$/,
+  // Allow private-network origins only outside production (local client previews).
+  ...(process.env.NODE_ENV !== 'production'
+    ? [/^http:\/\/(192\.168|10\.\d+|172\.(1[6-9]|2\d|3[01]))\.\d+\.\d+:5173$/]
+    : []),
 ];
 
 app.use(cors({
@@ -46,8 +48,8 @@ app.use(cors({
 }));
 
 // --- Body Parsing Middleware ---
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // --- Health Check ---
 app.get('/health', (req, res) => {
