@@ -82,29 +82,34 @@ const Services = () => {
         </div>
       </section>
 
-      {inquiryFormUrl && (
-        <section className="inquiry-cta-section">
-          <div className="container inquiry-cta-inner">
-            <div className="inquiry-cta-icon">📋</div>
-            <h2>Not Sure Which Service You Need?</h2>
-            <p>Fill out our Manuscript Inquiry Form and we'll assess your manuscript and recommend the right service for you — before you commit to anything.</p>
-            <a
-              href={inquiryFormUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary inquiry-cta-btn"
-            >
-              Start Your Manuscript Inquiry
-            </a>
-          </div>
-        </section>
-      )}
-
       <section className="cta-banner">
         <div className="container cta-banner__inner">
           <h2>Not sure which service you need?</h2>
-          <p>Book a free consultation and we'll guide you to the right fit.</p>
-          <Link to="/contact" className="btn btn-white" style={{ marginTop: '24px' }}>Book a Free Consultation</Link>
+          {inquiryFormUrl ? (
+            <>
+              <p>Choose how you'd like to get started:</p>
+              <div className="cta-options">
+                <div className="cta-option">
+                  <span className="cta-option__icon">📋</span>
+                  <h3>Manuscript Inquiry Form</h3>
+                  <p>Answer a few questions about your manuscript and we'll recommend the right service for you.</p>
+                  <a href={inquiryFormUrl} target="_blank" rel="noopener noreferrer" className="btn btn-white">Start Your Inquiry</a>
+                </div>
+                <div className="cta-options__divider">or</div>
+                <div className="cta-option">
+                  <span className="cta-option__icon">💬</span>
+                  <h3>Book a Free Consultation</h3>
+                  <p>Prefer to talk it through? Submit a quote request and we'll guide you to the right fit.</p>
+                  <Link to="/contact" className="btn btn-white">Get in Touch</Link>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <p>Book a free consultation and we'll guide you to the right fit.</p>
+              <Link to="/contact" className="btn btn-white" style={{ marginTop: '24px' }}>Book a Free Consultation</Link>
+            </>
+          )}
         </div>
       </section>
     </div>
