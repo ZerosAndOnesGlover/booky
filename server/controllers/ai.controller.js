@@ -8,6 +8,28 @@ const { Op, fn, col, literal } = require('sequelize');
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+// Reduce customer PII sent to the model (and exposed if an admin token leaks):
+// keep the first name and only the initial of any remaining names.
+const maskName = (name) => {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'Anonymous';
+  if (parts.length === 1) return parts[0];
+  return `${parts[0]} ${parts.slice(1).map((p) => p[0].toUpperCase() + '.').join(' ')}`;
+};
+
+// Best-effort per-process daily request cap as a backstop against runaway cost
+// if an admin token is compromised. Resets on restart; back it with shared
+// storage for multi-instance deployments.
+const DAILY_REQUEST_CAP = 300;
+let capDayKey = '';
+let capCount = 0;
+const withinDailyCap = () => {
+  const today = new Date().toISOString().slice(0, 10);
+  if (today !== capDayKey) { capDayKey = today; capCount = 0; }
+  capCount += 1;
+  return capCount <= DAILY_REQUEST_CAP;
+};
+
 const buildContext = async () => {
   const now = new Date();
   const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -69,7 +91,7 @@ const buildContext = async () => {
 const buildSystemPrompt = (ctx) => {
   const recentQuotesList = ctx.recentQuotes.length
     ? ctx.recentQuotes.map(q =>
-        `  • ${q.full_name} — ${q.editing_type || 'N/A'}` +
+        `  • ${maskName(q.full_name)} — ${q.editing_type || 'N/A'}` +
         `${q.word_count ? ` (${Number(q.word_count).toLocaleString()} words)` : ''}` +
         `${q.genre ? `, ${q.genre}` : ''}`
       ).join('\n')
@@ -138,6 +160,18 @@ const chat = async (req, res, next) => {
     const totalChars = messages.reduce((sum, m) => sum + String(m.content || '').length, 0);
     if (totalChars > 100000) {
       return res.status(400).json({ error: true, message: 'Message content too large.' });
+    }
+
+    // Only accept well-formed user/assistant turns.
+    const validMessages = messages.every(
+      (m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string'
+    );
+    if (!validMessages) {
+      return res.status(400).json({ error: true, message: 'Invalid message format.' });
+    }
+
+    if (!withinDailyCap()) {
+      return res.status(429).json({ error: true, message: 'Daily AI usage limit reached. Please try again tomorrow.' });
     }
 
     if (!process.env.ANTHROPIC_API_KEY) {
