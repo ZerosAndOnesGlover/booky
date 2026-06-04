@@ -4,7 +4,7 @@ import { getAdminSettingsApi, updateSettingsApi, uploadLogoApi, removeLogoApi, u
 import AdminLayout from '../../components/admin/AdminLayout';
 
 const Settings = () => {
-  const { token } = useAuth();
+  const { token, login, user } = useAuth();
   const [settings, setSettings] = useState({});
   const [toast, setToast] = useState('');
   const [saving, setSaving] = useState('');
@@ -147,10 +147,13 @@ const Settings = () => {
     }
     setSaving('password');
     try {
-      await changePasswordApi(token, {
+      const res = await changePasswordApi(token, {
         currentPassword: passwords.currentPassword,
         newPassword: passwords.newPassword,
       });
+      // Server re-issues a fresh token (old ones are invalidated) — adopt it
+      // so the current session stays authenticated.
+      if (res?.data?.token) login(res.data.token, user);
       setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
       showToast('Password changed successfully!');
     } catch (err) {

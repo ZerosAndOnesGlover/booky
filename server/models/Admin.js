@@ -34,6 +34,14 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  otp_attempts: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  token_version: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
   known_device_tokens: {
     type: DataTypes.TEXT,
     allowNull: true,

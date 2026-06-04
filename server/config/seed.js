@@ -15,14 +15,19 @@ const seed = async () => {
     await sequelize.authenticate();
     console.log('Connected to database');
 
-    // Admin user
-    const existing = await Admin.findOne({ where: { email: 'admin@bookyediting.com' } });
+    // Admin user — credentials come from the environment, never hardcoded
+    const seedEmail = process.env.SEED_ADMIN_EMAIL;
+    const seedPassword = process.env.SEED_ADMIN_PASSWORD;
+    if (!seedEmail || !seedPassword) {
+      console.error('Refusing to seed: set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD in the environment.');
+      process.exit(1);
+    }
+
+    const existing = await Admin.findOne({ where: { email: seedEmail.toLowerCase().trim() } });
     if (!existing) {
-      const password_hash = await bcrypt.hash('Booky@Admin2025', 12);
-      await Admin.create({ email: 'admin@bookyediting.com', password_hash });
-      console.log('Admin user created');
-      console.log('Email: admin@bookyediting.com');
-      console.log('Password: Booky@Admin2025');
+      const password_hash = await bcrypt.hash(seedPassword, 12);
+      await Admin.create({ email: seedEmail, password_hash });
+      console.log(`Admin user created for ${seedEmail}`);
     } else {
       console.log('Admin user already exists - skipping');
     }

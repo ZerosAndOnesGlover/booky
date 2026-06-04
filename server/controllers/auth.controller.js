@@ -61,6 +61,7 @@ const login = async (req, res, next) => {
       await admin.update({
         otp_code: otpHash,
         otp_expires_at: new Date(Date.now() + 10 * 60 * 1000),
+        otp_attempts: 0,
       });
       try {
         await sendOtpEmail(otp);
@@ -86,7 +87,7 @@ const login = async (req, res, next) => {
 // Helper to sign JWT and respond
 const issueToken = (res, admin, deviceToken = null) => {
   const token = jwt.sign(
-    { id: admin.id, email: admin.email },
+    { id: admin.id, email: admin.email, tv: admin.token_version || 0 },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );
@@ -120,8 +121,21 @@ const verifyOtp = async (req, res, next) => {
       return res.status(400).json({ error: true, message: 'Verification code has expired. Please log in again.' });
     }
 
-    const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
-    if (otpHash !== admin.otp_code) {
+    const otpHash = crypto.createHash('sha256').update(String(otp)).digest('hex');
+    const stored = admin.otp_code;
+    const match =
+      stored.length === otpHash.length &&
+      crypto.timingSafeEqual(Buffer.from(otpHash), Buffer.from(stored));
+
+    if (!match) {
+      const attempts = (admin.otp_attempts || 0) + 1;
+      // Invalidate the code entirely after too many wrong guesses (per-account,
+      // independent of source IP) to stop distributed brute-forcing of the OTP.
+      if (attempts >= 5) {
+        await admin.update({ otp_code: null, otp_expires_at: null, otp_attempts: 0 });
+        return res.status(400).json({ error: true, message: 'Too many incorrect codes. Please log in again to request a new one.' });
+      }
+      await admin.update({ otp_attempts: attempts });
       return res.status(400).json({ error: true, message: 'Invalid verification code.' });
     }
 
@@ -136,6 +150,7 @@ const verifyOtp = async (req, res, next) => {
     await admin.update({
       otp_code: null,
       otp_expires_at: null,
+      otp_attempts: 0,
       known_device_tokens: knownTokens,
     });
 
@@ -148,7 +163,6 @@ const verifyOtp = async (req, res, next) => {
 
 // --- LOGOUT ---
 const logout = (req, res) => {
-  res.clearCookie('booky_token');
   return res.status(200).json({ message: 'Logged out successfully' });
 };
 
@@ -175,9 +189,18 @@ const changePassword = async (req, res, next) => {
     }
 
     const password_hash = await bcrypt.hash(newPassword, 12);
-    await admin.update({ password_hash });
+    const newVersion = (admin.token_version || 0) + 1;
+    await admin.update({ password_hash, token_version: newVersion });
 
-    return res.status(200).json({ message: 'Password changed successfully.' });
+    // Re-issue a token for the current session (so the admin stays logged in)
+    // while every previously issued token is invalidated by the version bump.
+    const token = jwt.sign(
+      { id: admin.id, email: admin.email, tv: newVersion },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    return res.status(200).json({ message: 'Password changed successfully.', token });
   } catch (err) {
     next(err);
   }
@@ -233,8 +256,13 @@ const resetPassword = async (req, res, next) => {
       return res.status(400).json({ error: true, message: 'Reset token has expired.' });
     }
 
+    const admin = await Admin.findByPk(resetToken.admin_id);
+    if (!admin) {
+      return res.status(400).json({ error: true, message: 'Invalid or expired reset token.' });
+    }
     const password_hash = await bcrypt.hash(newPassword, 12);
-    await Admin.update({ password_hash }, { where: { id: resetToken.admin_id } });
+    // Bump token_version to invalidate any existing sessions after a reset.
+    await admin.update({ password_hash, token_version: (admin.token_version || 0) + 1 });
     await resetToken.destroy();
 
     return res.status(200).json({ message: 'Password reset successful. You can now log in.' });
