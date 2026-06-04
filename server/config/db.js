@@ -8,12 +8,18 @@ const connectionUrl = process.env.POSTGRES_URL.replace(/[?&]sslmode=\w+/, '');
 
 const isLocal = connectionUrl.includes('localhost') || connectionUrl.includes('127.0.0.1');
 
+// Provide the database provider's CA certificate (PEM) via DB_CA_CERT to enable
+// full TLS certificate verification and prevent MITM. When it is absent we fall
+// back to encrypted-but-unverified so existing deployments keep working.
+const caCert = process.env.DB_CA_CERT;
+
 const sequelize = new Sequelize(connectionUrl, {
   dialect: 'postgres',
   dialectOptions: isLocal ? { ssl: false } : {
     ssl: {
       require: true,
-      rejectUnauthorized: false,
+      rejectUnauthorized: Boolean(caCert),
+      ...(caCert ? { ca: caCert } : {}),
     },
   },
   pool: {
