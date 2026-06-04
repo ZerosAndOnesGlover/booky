@@ -3,6 +3,12 @@ const { Resend } = require('resend');
 const getResend = () => new Resend(process.env.RESEND_API_KEY);
 const FROM = `Booky Admin <noreply@bookyeditingservices.com>`;
 
+// Escape user-supplied values before embedding them in email HTML to prevent
+// HTML/content injection (e.g. phishing links) in admin notifications.
+const esc = (s) =>
+  String(s ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 // --- PASSWORD RESET EMAIL ---
 const sendPasswordResetEmail = async (toEmail, resetUrl) => {
   const resend = getResend();
@@ -40,20 +46,20 @@ const sendQuoteNotificationEmail = async (submission) => {
   await resend.emails.send({
     from: `Booky Website <noreply@bookyeditingservices.com>`,
     to: process.env.NOTIFICATION_EMAIL,
-    subject: `New Quote Request — ${submission.full_name}`,
+    subject: `New Quote Request — ${esc(submission.full_name)}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #4B2E63;">New Quote Request Received</h2>
         <table style="width: 100%; border-collapse: collapse;">
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Name</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.full_name}</td></tr>
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Email</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.email}</td></tr>
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Phone</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.phone}</td></tr>
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Book Title</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.book_title}</td></tr>
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Genre</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.genre}</td></tr>
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Word Count</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.word_count}</td></tr>
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Service Needed</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.editing_type}</td></tr>
-          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Deadline</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${submission.deadline}</td></tr>
-          <tr><td style="padding: 8px;"><strong>Manuscript</strong></td><td style="padding: 8px;">${submission.file_url ? `<a href="${submission.file_url}">Download File</a>` : 'No file uploaded'}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Name</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.full_name)}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Email</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.email)}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Phone</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.phone)}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Book Title</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.book_title)}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Genre</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.genre)}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Word Count</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.word_count)}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Service Needed</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.editing_type)}</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Deadline</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${esc(submission.deadline)}</td></tr>
+          <tr><td style="padding: 8px;"><strong>Manuscript</strong></td><td style="padding: 8px;">${submission.file_url ? `<a href="${esc(submission.file_url)}">Download File</a>` : 'No file uploaded'}</td></tr>
         </table>
         <p style="margin-top: 24px;">Log in to the <a href="${process.env.FRONTEND_URL}/admin">Admin Panel</a> to view and manage this submission.</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
