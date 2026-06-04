@@ -8,6 +8,17 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 const { Op } = require('sequelize');
 
+// Hardened sanitiser config for admin-authored blog HTML, which is rendered to
+// the public via dangerouslySetInnerHTML. Keeps the rich-text editor's
+// formatting while explicitly stripping scripting, framing/embedding, forms,
+// SVG/MathML (mXSS vectors) and data-* attributes.
+const SANITIZE_CONFIG = {
+  FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'svg', 'math'],
+  FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'formaction', 'srcset'],
+  ALLOW_DATA_ATTR: false,
+  ADD_ATTR: ['target', 'rel'],
+};
+
 // --- PUBLIC: Get all published posts ---
 const getPublishedPosts = async (req, res, next) => {
   try {
@@ -128,7 +139,7 @@ const createPost = async (req, res, next) => {
   try {
     const { title, body, category, meta_description, status } = req.body;
 
-    const cleanBody = DOMPurify.sanitize(body);
+    const cleanBody = DOMPurify.sanitize(body, SANITIZE_CONFIG);
     const slug = await generateUniqueSlug(title);
 
     let cover_image_url = null;
@@ -172,7 +183,7 @@ const updatePost = async (req, res, next) => {
     }
 
     const { title, body, category, meta_description, status } = req.body;
-    const cleanBody = body ? DOMPurify.sanitize(body) : post.body;
+    const cleanBody = body ? DOMPurify.sanitize(body, SANITIZE_CONFIG) : post.body;
 
     let slug = post.slug;
     if (title && title !== post.title) {
