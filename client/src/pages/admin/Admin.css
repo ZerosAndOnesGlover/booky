@@ -1037,6 +1037,71 @@
     flex: 1;
     min-width: 0;
   }
+
+  /* Card-style table rows — prevents horizontal scroll on mobile & small tablets */
+  .admin-table-wrapper {
+    overflow-x: visible;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-table,
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table tr {
+    border-bottom: 2px solid rgba(75, 46, 99, 0.12);
+    margin-bottom: 4px;
+    padding: 4px 0;
+  }
+
+  .admin-table tr:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .admin-table td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(75, 46, 99, 0.05);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+
+  .admin-table td:last-child {
+    border-bottom: none;
+  }
+
+  .admin-table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-grey);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    text-align: left;
+  }
+
+  /* Expanded detail row (Quotes) — full-width, no label */
+  .admin-table tr.detail-row td {
+    padding: 0;
+    border-bottom: none;
+    display: block;
+  }
+
+  .quote-detail__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Truncate brand name on small phones */
@@ -1101,7 +1166,6 @@
   color: var(--color-text);
 }
 
-/* --- Card-style table rows on small screens (replaces horizontal scroll) --- */
 @media (max-width: 600px) {
   .admin-stats {
     grid-template-columns: repeat(2, 1fr);
@@ -1116,67 +1180,11 @@
   }
 
   .analytics-stats {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(1, 1fr) !important;
   }
 
-  .admin-table-wrapper {
-    overflow-x: visible;
-  }
-
-  .admin-table thead {
-    display: none;
-  }
-
-  .admin-table,
-  .admin-table tbody,
-  .admin-table tr,
-  .admin-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .admin-table tr {
-    border-bottom: 2px solid rgba(75, 46, 99, 0.12);
-    margin-bottom: 4px;
-    padding: 4px 0;
-  }
-
-  .admin-table tr:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-  }
-
-  .admin-table td {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(75, 46, 99, 0.05);
-    font-size: 0.9rem;
-    box-sizing: border-box;
-  }
-
-  .admin-table td:last-child {
-    border-bottom: none;
-  }
-
-  .admin-table td[data-label]::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: var(--color-grey);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
-    text-align: left;
-  }
-
-  /* Expanded detail row (Quotes) — full-width, no label */
-  .admin-table tr.detail-row td {
-    padding: 0;
-    border-bottom: none;
-    display: block;
+  .analytics-grid {
+    grid-template-columns: 1fr !important;
   }
 
   .admin-table tr.detail-row td::before {

@@ -46,7 +46,7 @@
 
 .about-preview__image img {
   width: 100%;
-  height: clamp(260px, 42vw, 480px);
+  height: clamp(200px, 42vw, 480px);
   object-fit: cover;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow);
@@ -54,7 +54,7 @@
 
 .about-preview__placeholder {
   width: 100%;
-  height: clamp(260px, 42vw, 480px);
+  height: clamp(200px, 42vw, 480px);
   background-color: var(--color-secondary);
   border-radius: var(--border-radius-lg);
 }
@@ -403,9 +403,23 @@
 }
 
 @media (max-width: 768px) {
-  .hero { min-height: 60vh; }
+  .hero { min-height: 55vh; }
   .hero__inner { padding: var(--spacing-lg) 0; }
   .hero__ctas { flex-direction: column; }
   .hero__ctas .btn { width: 100%; text-align: center; }
   .cta-banner { padding: var(--spacing-lg) 0; }
+  .testimonial-card { padding: var(--spacing-md); }
+}
+
+@media (max-width: 480px) {
+  .hero { min-height: 45vh; }
+  .books-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xs);
+  }
+  .book-card__info { padding: var(--spacing-xs); }
+}
+
+@media (max-width: 400px) {
+  .books-grid { grid-template-columns: 1fr; }
 }

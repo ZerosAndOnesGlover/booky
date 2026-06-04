@@ -97,6 +97,18 @@
   .page-hero { padding: var(--spacing-xl) 0 var(--spacing-lg); }
 }
 
+@media (max-width: 480px) {
+  .inquiry-form-banner {
+    padding: var(--spacing-sm) var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+  .inquiry-form-banner__icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+}
+
 @media (max-width: 768px) {
   .form-grid { grid-template-columns: 1fr; }
   .quote-form { padding: var(--spacing-md); }

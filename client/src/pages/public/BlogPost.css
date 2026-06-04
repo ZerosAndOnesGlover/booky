@@ -406,3 +406,11 @@
     padding: var(--spacing-md);
   }
 }
+
+@media (max-width: 640px) {
+  .blog-post__body th,
+  .blog-post__body td {
+    white-space: normal;
+    word-break: break-word;
+  }
+}

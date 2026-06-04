@@ -127,7 +127,27 @@
   .service-row--reverse .service-row__content {
     order: unset;
   }
+  .service-row__icon-block {
+    width: 120px;
+    height: 120px;
+    font-size: 3rem;
+  }
+  .service-row__content h2 {
+    font-size: 1.4rem;
+  }
   .page-hero {
     padding: var(--spacing-lg) 0 var(--spacing-md);
+  }
+}
+
+@media (max-width: 640px) {
+  .cta-option {
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+  .cta-options__divider {
+    width: 100%;
+    text-align: center;
   }
 }
