@@ -227,16 +227,16 @@ const Settings = () => {
         <div className="admin-form">
           <h3 className="settings-section-title">Manuscript Inquiry Form</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-grey)', marginBottom: '12px' }}>
-            Paste the embed URL from Google Forms (open the form &rarr; Send &rarr; Embed tab &rarr; copy the <code>src</code> URL).
-            When set, the form will be embedded on the Services page and linked from the Contact page.
+            Paste the Google Form link (e.g. <code>https://forms.gle/...</code> or the full URL).
+            When set, a button will appear on the Services page and a prompt will show on the Contact page.
             Clear the field and save to remove it from the site.
           </p>
           <form onSubmit={handleInquiryFormSave}>
             <div className="form-group">
-              <label>Embed URL</label>
+              <label>Form URL</label>
               <input
                 type="url"
-                placeholder="https://docs.google.com/forms/d/e/.../viewform?embedded=true"
+                placeholder="https://forms.gle/..."
                 value={settings.manuscript_inquiry_form_url || ''}
                 onChange={(e) => { setSettings(s => ({ ...s, manuscript_inquiry_form_url: e.target.value })); setInquiryFormSaved(false); }}
               />

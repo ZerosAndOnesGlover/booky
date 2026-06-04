@@ -80,28 +80,19 @@ const Services = () => {
       </section>
 
       {inquiryFormUrl && (
-        <section className="section inquiry-form-section">
-          <div className="container">
-            <div className="inquiry-form-header">
-              <h2>Start Here: Manuscript Inquiry</h2>
-              <p>Still not sure which service fits your manuscript? Fill out this short form and we'll recommend the right path for you.</p>
-            </div>
-            <div className="inquiry-form-embed">
-              <iframe
-                src={inquiryFormUrl}
-                title="Manuscript Inquiry Form"
-                frameBorder="0"
-                marginHeight="0"
-                marginWidth="0"
-              >
-                Loading form&hellip;
-              </iframe>
-            </div>
-            <div className="inquiry-form-fallback">
-              <a href={inquiryFormUrl} target="_blank" rel="noopener noreferrer">
-                Open form in a new tab &rarr;
-              </a>
-            </div>
+        <section className="inquiry-cta-section">
+          <div className="container inquiry-cta-inner">
+            <div className="inquiry-cta-icon">📋</div>
+            <h2>Not Sure Which Service You Need?</h2>
+            <p>Fill out our Manuscript Inquiry Form and we'll assess your manuscript and recommend the right service for you — before you commit to anything.</p>
+            <a
+              href={inquiryFormUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary inquiry-cta-btn"
+            >
+              Start Your Manuscript Inquiry
+            </a>
           </div>
         </section>
       )}
