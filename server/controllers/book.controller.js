@@ -1,5 +1,14 @@
 const Book = require('../models/Book');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../middleware/upload');
+const { safeUrl } = require('../utils/url');
+
+// Keep only links with a name and a valid http(s) URL — drops dangerous
+// schemes (javascript:, data:, …) before they are stored and rendered as
+// anchors on the public Books page.
+const sanitizeLinks = (arr) =>
+  (Array.isArray(arr) ? arr : [])
+    .map((l) => ({ name: String(l?.name ?? '').trim(), url: safeUrl(l?.url) }))
+    .filter((l) => l.name && l.url);
 
 // --- PUBLIC: Get all active books ---
 const getBooks = async (req, res, next) => {
@@ -59,7 +68,7 @@ const createBook = async (req, res, next) => {
       description: description || null,
       cover_image_url,
       cover_image_public_id,
-      links: parsedLinks,
+      links: sanitizeLinks(parsedLinks),
       display_order: count,
     });
 
@@ -104,7 +113,7 @@ const updateBook = async (req, res, next) => {
       description: description !== undefined ? (description || null) : book.description,
       cover_image_url,
       cover_image_public_id,
-      links: parsedLinks,
+      links: sanitizeLinks(parsedLinks),
       display_order: display_order !== undefined ? Number(display_order) : book.display_order,
       is_active: is_active !== undefined ? is_active : book.is_active,
     });

@@ -1,5 +1,6 @@
 const SiteSettings = require('../models/SiteSettings');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../middleware/upload');
+const { safeUrl } = require('../utils/url');
 
 // --- PUBLIC: Get site settings ---
 const getSettings = async (req, res, next) => {
@@ -19,6 +20,15 @@ const getSettings = async (req, res, next) => {
 const updateSettings = async (req, res, next) => {
   try {
     const { whatsapp_number, contact_email, instagram_url, twitter_url, facebook_url, linkedin_url, manuscript_inquiry_form_url, manuscript_inquiry_form_enabled } = req.body;
+
+    // Reject dangerous URL schemes (e.g. javascript:) for any provided link
+    // field — these are later rendered as href/src on public pages.
+    const urlFields = { instagram_url, twitter_url, facebook_url, linkedin_url, manuscript_inquiry_form_url };
+    for (const [key, val] of Object.entries(urlFields)) {
+      if (val && !safeUrl(val)) {
+        return res.status(400).json({ error: true, message: `Invalid URL for ${key}. Only http(s) links are allowed.` });
+      }
+    }
 
     const [settings] = await SiteSettings.findOrCreate({
       where: { id: 1 },
