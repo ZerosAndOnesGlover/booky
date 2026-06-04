@@ -124,8 +124,11 @@ const Settings = () => {
     e.preventDefault();
     setSaving('inquiry');
     try {
-      await updateSettingsApi(token, { manuscript_inquiry_form_url: settings.manuscript_inquiry_form_url ?? '' });
-      showToast('Inquiry form URL saved!');
+      await updateSettingsApi(token, {
+        manuscript_inquiry_form_url: settings.manuscript_inquiry_form_url ?? '',
+        manuscript_inquiry_form_enabled: settings.manuscript_inquiry_form_enabled ?? true,
+      });
+      showToast('Inquiry form settings saved!');
       setInquiryFormSaved(true);
     } catch { showToast('Save failed.'); }
     setSaving('');
@@ -241,8 +244,21 @@ const Settings = () => {
                 onChange={(e) => { setSettings(s => ({ ...s, manuscript_inquiry_form_url: e.target.value })); setInquiryFormSaved(false); }}
               />
             </div>
+            <div className="settings-toggle-row">
+              <label className="settings-toggle-label">
+                <input
+                  type="checkbox"
+                  checked={settings.manuscript_inquiry_form_enabled ?? true}
+                  onChange={(e) => { setSettings(s => ({ ...s, manuscript_inquiry_form_enabled: e.target.checked })); setInquiryFormSaved(false); }}
+                />
+                <span>Show form on website</span>
+              </label>
+              <span className={`settings-toggle-status ${settings.manuscript_inquiry_form_enabled ?? true ? 'status-on' : 'status-off'}`}>
+                {settings.manuscript_inquiry_form_enabled ?? true ? 'Visible' : 'Hidden'}
+              </span>
+            </div>
             <button type="submit" className="btn btn-primary settings-save-btn" disabled={saving === 'inquiry'}>
-              {saving === 'inquiry' ? 'Saving...' : inquiryFormSaved ? 'Saved' : 'Save Form URL'}
+              {saving === 'inquiry' ? 'Saving...' : inquiryFormSaved ? 'Saved' : 'Save'}
             </button>
           </form>
         </div>

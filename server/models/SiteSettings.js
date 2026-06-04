@@ -61,6 +61,10 @@ const SiteSettings = sequelize.define('SiteSettings', {
     type: DataTypes.STRING(1000),
     allowNull: true,
   },
+  manuscript_inquiry_form_enabled: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
 }, {
   tableName: 'site_settings',
   timestamps: true,

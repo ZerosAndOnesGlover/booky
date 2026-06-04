@@ -22,7 +22,10 @@ const Contact = () => {
   const preselectedService = searchParams.get('service') || '';
 
   useEffect(() => {
-    getSettingsApi().then((res) => setInquiryFormUrl(res.data.settings.manuscript_inquiry_form_url || null)).catch(() => {});
+    getSettingsApi().then((res) => {
+      const { manuscript_inquiry_form_url, manuscript_inquiry_form_enabled } = res.data.settings;
+      setInquiryFormUrl(manuscript_inquiry_form_enabled !== false && manuscript_inquiry_form_url ? manuscript_inquiry_form_url : null);
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {

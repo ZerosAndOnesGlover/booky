@@ -574,6 +574,45 @@
   margin-top: 12px;
 }
 
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin: 12px 0 4px;
+}
+
+.settings-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.settings-toggle-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.settings-toggle-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.status-on {
+  background-color: #d4edda;
+  color: #276749;
+}
+
+.status-off {
+  background-color: #f5f5f5;
+  color: var(--color-grey);
+}
+
 .settings-error {
   color: var(--color-error, #e53e3e);
   background-color: #fce4e4;
