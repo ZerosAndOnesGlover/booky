@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { submitQuote, getQuotes, getQuoteById, toggleReadStatus } = require('../controllers/quote.controller');
+const { submitQuote, getQuotes, getQuoteById, toggleReadStatus, markAllQuotesRead } = require('../controllers/quote.controller');
 const authMiddleware = require('../middleware/auth');
 const { upload } = require('../middleware/upload');
 const { body, validationResult } = require('express-validator');
@@ -55,6 +55,7 @@ router.post('/public/quote', quoteLimiter, upload.single('manuscript'),
 
 // --- ADMIN ---
 router.get('/admin/quotes', authMiddleware, getQuotes);
+router.put('/admin/quotes/read-all', authMiddleware, markAllQuotesRead);
 router.get('/admin/quotes/:id', authMiddleware, getQuoteById);
 router.put('/admin/quotes/:id/read', authMiddleware, toggleReadStatus);
 

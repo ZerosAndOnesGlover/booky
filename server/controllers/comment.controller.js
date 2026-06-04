@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const BlogComment = require('../models/BlogComment');
 const BlogPost = require('../models/BlogPost');
 const rateLimit = require('express-rate-limit');
@@ -48,6 +49,7 @@ const adminGetComments = async (req, res, next) => {
     const where = {};
     if (req.query.status === 'pending')  where.is_approved = false;
     if (req.query.status === 'approved') where.is_approved = true;
+    if (req.query.since) where.created_at = { [Op.gt]: new Date(parseInt(req.query.since)) };
 
     const page   = parseInt(req.query.page) || 1;
     const limit  = 20;

@@ -116,4 +116,14 @@ const toggleReadStatus = async (req, res, next) => {
   }
 };
 
-module.exports = { submitQuote, getQuotes, getQuoteById, toggleReadStatus };
+// --- ADMIN: Mark all unread quotes as read ---
+const markAllQuotesRead = async (req, res, next) => {
+  try {
+    await QuoteSubmission.update({ is_read: true }, { where: { is_read: false } });
+    return res.status(200).json({ message: 'All quotes marked as read.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { submitQuote, getQuotes, getQuoteById, toggleReadStatus, markAllQuotesRead };

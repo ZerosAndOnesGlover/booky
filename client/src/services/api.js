@@ -137,8 +137,8 @@ export const getAnalyticsApi = (token, range = '30d', startDate = '', endDate = 
 };
 
 // --- Admin: Comments ---
-export const getAdminCommentsApi = (token, status = '', page = 1) =>
-  api.get(`/api/admin/comments?status=${status}&page=${page}`, {
+export const getAdminCommentsApi = (token, status = '', page = 1, since = 0) =>
+  api.get(`/api/admin/comments?status=${status}&page=${page}${since ? `&since=${since}` : ''}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 export const approveCommentApi = (token, id) =>
@@ -172,6 +172,9 @@ export const getQuotesApi = (token, status = '', page = 1) => api.get(`/api/admi
   headers: { Authorization: `Bearer ${token}` },
 });
 export const getQuoteByIdApi = (token, id) => api.get(`/api/admin/quotes/${id}`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+export const markAllQuotesReadApi = (token) => api.put('/api/admin/quotes/read-all', {}, {
   headers: { Authorization: `Bearer ${token}` },
 });
 export const toggleReadApi = (token, id, is_read) => api.put(`/api/admin/quotes/${id}/read`, { is_read }, {
